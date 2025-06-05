@@ -31,6 +31,7 @@ PrintsStudio aims to streamline the printing order process by providing a user-f
 ## Project Structure
 
 PrintsStudio.sln
+
 |
 ├── PrintsStudio.Client           
 ├── PrintsStudio.Server           
