@@ -1,0 +1,137 @@
+﻿@page "/login"
+
+<style>
+    .login-container {
+        background-color: #ceedec;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Lato', sans-serif;
+    }
+
+    .login-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        width: 320px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h3 {
+        color: #242f66;
+        font-family: 'Merriweather', serif;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    label {
+        font-weight: 600;
+        color: #242f66;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 0.5rem;
+        margin-top: 0.3rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: 'Lato', sans-serif;
+    }
+
+    .btn-login {
+        width: 100%;
+        background-color: #07a6a6;
+        color: white;
+        padding: 0.6rem;
+        border: none;
+        border-radius: 4px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: 'Lato', sans-serif;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-login:hover {
+            background-color: #059a9a;
+        }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #242f66;
+    }
+
+        .login-footer a {
+            color: #07a6a6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+            .login-footer a:hover {
+                text-decoration: underline;
+            }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-family: 'Lato', sans-serif;
+        color: #242f66;
+    }
+
+        .remember-me input {
+            margin-right: 0.5rem;
+        }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <h3>Welcome Back!</h3>
+        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <label for="email">Email</label>
+            <InputText id="email" type="email" @bind-Value="loginModel.Email" placeholder="Enter your email" class="form-control" />
+
+            <label for="password">Password</label>
+            <InputText id="password" type="password" @bind-Value="loginModel.Password" placeholder="Enter your password" class="form-control" />
+
+            <div class="remember-me">
+                <InputCheckbox id="rememberMe" @bind-Value="loginModel.RememberMe" />
+                <label for="rememberMe">Remember Me</label>
+            </div>
+
+            <button type="submit" class="btn-login">Login</button>
+        </EditForm>
+
+        <div class="login-footer">
+            <p>Don't have an account? <a href="/register">Sign Up</a></p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new();
+
+    private async Task HandleLogin()
+    {
+        // TODO: Call your API or service to login with loginModel.Email and loginModel.Password
+        // For example, redirect or show errors.
+    }
+
+    public class LoginModel
+    {
+        
+        public string Email { get; set; } = "";
+
+       
+        public string Password { get; set; } = "";
+
+        public bool RememberMe { get; set; }
+    }
+}

@@ -1,0 +1,13 @@
+﻿using PrintsStudio.Domain.Entities;
+
+namespace PrintsStudio.Application.Interfaces
+{
+    public interface IDesignerService
+    {
+        Task<IEnumerable<Designer>> GetAllAsync();
+        Task<Designer?> GetByIdAsync(int id);
+        Task AddAsync(Designer designer);
+        Task UpdateAsync(Designer designer);
+        Task DeleteAsync(int id);
+    }
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "PrintsStudio.Server\\PrintsStudio.Server.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "scd_project\\scd_project.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

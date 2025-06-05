@@ -1,0 +1,157 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
+      "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\obj\\Debug\\net8.0\\scopedcss\\bundle\\scd_project.styles.css",
+      "PackagePath": "staticwebassets\\scd_project.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\css\\footer.css",
+      "PackagePath": "staticwebassets\\css\\footer.css"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\icon-192.png",
+      "PackagePath": "staticwebassets\\icon-192.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\album.jpg",
+      "PackagePath": "staticwebassets\\images\\album.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\bg-cropped.png",
+      "PackagePath": "staticwebassets\\images\\bg-cropped.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\business card.jpg",
+      "PackagePath": "staticwebassets\\images\\business card.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\business-cards.png",
+      "PackagePath": "staticwebassets\\images\\business-cards.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\color_p.jpeg",
+      "PackagePath": "staticwebassets\\images\\color_p.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\colorp.png",
+      "PackagePath": "staticwebassets\\images\\colorp.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\contact.png",
+      "PackagePath": "staticwebassets\\images\\contact.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\contact_us.jpg",
+      "PackagePath": "staticwebassets\\images\\contact_us.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\flyer.png",
+      "PackagePath": "staticwebassets\\images\\flyer.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\graphic_designer.jpg",
+      "PackagePath": "staticwebassets\\images\\graphic_designer.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\hoddie.jpg",
+      "PackagePath": "staticwebassets\\images\\hoddie.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\hoise.png",
+      "PackagePath": "staticwebassets\\images\\hoise.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\image.png",
+      "PackagePath": "staticwebassets\\images\\image.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\photoalbum.png",
+      "PackagePath": "staticwebassets\\images\\photoalbum.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\poster.jpg",
+      "PackagePath": "staticwebassets\\images\\poster.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\printer.jpg",
+      "PackagePath": "staticwebassets\\images\\printer.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\sticker.png",
+      "PackagePath": "staticwebassets\\images\\sticker.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\stickers.jpg",
+      "PackagePath": "staticwebassets\\images\\stickers.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\tem2.jpg",
+      "PackagePath": "staticwebassets\\images\\tem2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\tshirt.png",
+      "PackagePath": "staticwebassets\\images\\tshirt.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\vec.jpg",
+      "PackagePath": "staticwebassets\\images\\vec.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\wedding card.png",
+      "PackagePath": "staticwebassets\\images\\wedding card.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\images\\wedding cards.jpg",
+      "PackagePath": "staticwebassets\\images\\wedding cards.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Downloads\\PrintsStudio\\scd_project\\wwwroot\\sample-data\\weather.json",
+      "PackagePath": "staticwebassets\\sample-data\\weather.json"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.scd_project.props",
+      "PackagePath": "build\\scd_project.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.scd_project.props",
+      "PackagePath": "buildMultiTargeting\\scd_project.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.scd_project.props",
+      "PackagePath": "buildTransitive\\scd_project.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.scd_project.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.scd_project.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

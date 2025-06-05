@@ -1,0 +1,179 @@
+﻿@page "/about-me"
+@inject NavigationManager Navigation
+
+
+
+<div class="py-5" style="background-color: #ceedec; font-family: 'Lato', sans-serif;">
+    <div class="container">
+        <div class="row align-items-center flex-lg-row-reverse">
+            <div class="col-lg-6 text-center">
+                <img src="@Model.provider.ProfilePicPath" class="img-fluid rounded-circle" alt="Avatar">
+            </div>
+            <div class="col-lg-6">
+                <div>
+                    <h3 class="mb-3" style="color: #242f66; font-family: 'Merriweather', serif;">About Me</h3>
+                    <h6 class="mb-3 text-danger">@Model.provider.about_me</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <span class="fw-bold" style="color: #07a6a6;">Name:</span>
+                                <p>@Model.provider.FirstName @Model.provider.LastName</p>
+                            </div>
+                            <div class="mb-2">
+                                <span class="fw-bold" style="color: #07a6a6;">Education:</span>
+                                <p>@Model.provider.Education</p>
+                            </div>
+                            <div class="mb-2">
+                                <span class="fw-bold" style="color: #07a6a6;">Residence:</span>
+                                <p>@Model.provider.City</p>
+                            </div>
+                            <div class="mb-2">
+                                <span class="fw-bold" style="color: #07a6a6;">Skills:</span>
+                                <p>@Model.provider.skill</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <span class="fw-bold" style="color: #07a6a6;">E-mail:</span>
+                                <p>@Model.provider.Email</p>
+                            </div>
+                            <div class="mb-2">
+                                <span class="fw-bold" style="color: #07a6a6;">Phone:</span>
+                                <p>@Model.provider.PhoneNumber</p>
+                            </div>
+                            <div class="mb-2">
+                                <span class="fw-bold" style="color: #07a6a6;">Experience:</span>
+                                <p>@Model.provider.expereince years</p>
+                            </div>
+                            <div class="mb-2">
+                                <span class="fw-bold" style="color: #07a6a6;">Status:</span>
+                                <p>@Model.provider.status</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row text-center mt-5">
+            <div class="col-6 col-lg-3 mb-3">
+                <div class="py-3 rounded shadow-sm" style="background-color: #ffffff;">
+                    <h6 class="h2" style="color: #242f66; font-weight: 700;">@Model.clients</h6>
+                    <p class="mb-0 fw-semibold">Happy Clients</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3 mb-3">
+                <div class="py-3 rounded shadow-sm" style="background-color: #ffffff;">
+                    <h6 class="h2" style="color: #242f66; font-weight: 700;">@Model.projects</h6>
+                    <p class="mb-0 fw-semibold">Project Completed</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3 mb-3">
+                <div class="py-3 rounded shadow-sm" style="background-color: #ffffff;">
+                    <h6 class="h2" style="color: #242f66; font-weight: 700;">@Model.positiveReviews%</h6>
+                    <p class="mb-0 fw-semibold">Positive Reviews</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3 mb-3">
+                <div class="py-3 rounded shadow-sm" style="background-color: #ffffff;">
+                    <h6 class="h2" style="color: #242f66; font-weight: 700;">@Model.clientSatisfaction%</h6>
+                    <p class="mb-0 fw-semibold">Client Satisfaction</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+  
+
+    public class ProviderProfile
+
+    {
+
+        public Provider provider { get; set; }
+
+        public int clients { get; set; }
+
+        public int projects { get; set; }
+
+        public int positiveReviews { get; set; } // Percentage (e.g., 95)
+
+        public int clientSatisfaction { get; set; } // Percentage (e.g., 98)
+
+    }
+
+
+
+    public class Provider
+
+    {
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string Email { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public string City { get; set; }
+
+        public string Education { get; set; }
+
+        public string skill { get; set; }
+
+        public string about_me { get; set; }
+
+        public string status { get; set; }
+
+        public int expereince { get; set; } // In years
+
+        public string ProfilePicPath { get; set; } // URL or path to image
+
+    }
+
+    private ProviderProfile Model = new ProviderProfile
+
+        {
+
+            provider = new Provider
+
+            {
+
+                FirstName = "Ali",
+
+                LastName = "Raza",
+
+                Email = "ali.raza@example.com",
+
+                PhoneNumber = "0300-1234567",
+
+                City = "Lahore",
+
+                Education = "BS Computer Science",
+
+                skill = "Web Development, Blazor, ASP.NET",
+
+                about_me = "I'm a passionate developer with a focus on building modern web apps using Blazor and .NET technologies.",
+
+                status = "Available",
+
+                expereince = 3,
+
+                ProfilePicPath = "" // Placeholder image
+
+            },
+
+            clients = 75,
+
+            projects = 120,
+
+            positiveReviews = 92,
+
+            clientSatisfaction = 97
+
+        };
+
+    }
+}
+}

@@ -1,0 +1,115 @@
+﻿@page "/Catalogue"
+@using scd_project.Models;
+<style>
+    /* Search input */
+    .search-bar {
+        width: 60%;
+        max-width: 400px;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        border: none;
+        font-size: 1.1rem;
+        outline: none;
+        color: #22162B;
+        background-color: #F8C630;
+        box-shadow: 0 2px 6px rgba(248, 198, 48, 0.5);
+        transition: box-shadow 0.3s ease;
+    }
+
+        .search-bar:focus {
+            box-shadow: 0 0 10px #F8C630;
+        }
+
+    /* Filter icon */
+    .filter-icon {
+        position: absolute;
+        right: 0;
+        cursor: pointer;
+        font-size: 1.6rem;
+        color: #E54F6D;
+        background: transparent;
+        border: none;
+        padding: 0.25rem;
+        transition: color 0.3s ease;
+    }
+
+        .filter-icon:hover {
+            color: #F8C630;
+        }
+</style>
+
+<body class="bg-light p-5">
+  <div class="container">
+    <h2 class="text-center  text-dark mb-4">Our Printing Services</h2>
+
+        <div class="top-bar">
+            <input type="text" class="search-bar" placeholder="Search products..." />
+            <button class="filter-icon" title="Filter">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" width="24" height="24">
+                    <path d="M6 10.117V14l4-2v-1.883l5.447-6.61a.5.5 0 00-.447-.754H1a.5.5 0 00-.447.754L6 10.117zM2.5 1a.5.5 0 01.5.5v4.243l-1.447-1.76A.5.5 0 012.5 1z" />
+                </svg>
+            </button>
+        </div>
+
+    <div class="row g-4">
+     @*  @foreach (var item in Services)
+      {
+          <div class="col-md-4 d-flex">
+              <ProductCardComponent product="@item"></ProductCardComponent>
+          </div>
+      } *@
+    </div>
+  </div>
+</body>
+@code {
+//     private List<Product> Services = new()
+// {
+//     new Product
+//     {
+//         Id = 1,
+//         Title = "Custom T-Shirt",
+//         subTitle = "High-quality fabric with full-color print",
+//         titleImage = "/images/tshirt.png",
+//     },
+//     new Product
+//     {
+//         Id = 2,
+//         Title = "Personalized Mug",
+//         subTitle = "Dishwasher safe, photo print",
+//         titleImage = "/images/tshirt.png",
+       
+//     },
+//     new Product
+//     {
+//         Id = 3,
+//         Title = "Business Cards",
+//         subTitle = "Premium paper with matte finish",
+//         titleImage = "/images/business-cards.png",
+      
+//     },
+//     new Product
+//     {
+//         Id = 4,
+//         Title = "Vinyl Stickers",
+//         subTitle = "Weatherproof and durable",
+//         titleImage = "/images/sticker.png",
+       
+//     },
+//     new Product
+//     {
+//         Id = 5,
+//         Title = "Brochures",
+//         subTitle = "Glossy tri-fold marketing brochures",
+//         titleImage = "/images/flyer.png",
+//     },
+//     new Product
+//     {
+//         Id = 6,
+//         Title = "Canvas Prints",
+//         subTitle = "Museum-quality wall art",
+//         titleImage = "/images/album.jpg",
+
+//     }
+};
+
+}

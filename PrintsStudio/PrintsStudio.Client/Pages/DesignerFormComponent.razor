@@ -1,0 +1,229 @@
+﻿@page "/designer-form"
+
+
+@if (showForm)
+{
+    <div class="designer-form-overlay">
+        <div class="designer-form-container">
+            <h2 class="form-title">
+                Complete Your Designer Profile
+            </h2>
+
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea class="form-control" @bind="designer.Bio" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Upload Portfolio (PDF/ZIP)</label>
+                <InputFile OnChange="HandlePortfolioUpload" />
+                @if (!string.IsNullOrEmpty(portfolioFileName))
+                {
+                    <p style="margin-top: 6px;">Uploaded: <strong>@portfolioFileName</strong></p>
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Upload Profile Image</label>
+                <InputFile OnChange="HandleImageUpload" accept="image/*" />
+                @if (!string.IsNullOrEmpty(designer.ProfileImageUrl))
+                {
+                    <img src="@designer.ProfileImageUrl" style="margin-top: 8px; max-width: 100px; border-radius: 8px;" />
+                }
+            </div>
+
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="availability" @bind="isAvailable" />
+                <label for="availability">I am available for work</label>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-save" @onclick="SaveProfile">Save</button>
+                <button class="btn-cancel" @onclick="CloseForm">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+
+<style>
+    .designer-form-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .designer-form-container {
+        background-color: #ceedec;
+        padding: 30px 25px;
+        border-radius: 1rem;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+        font-family: 'Lato', sans-serif;
+        box-sizing: border-box;
+    }
+
+    .form-title {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-weight: 600;
+        color: #242f66;
+        margin-bottom: 6px;
+    }
+
+    .form-control {
+        padding: 8px 12px;
+        font-family: 'Lato', sans-serif;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        resize: none;
+    }
+
+    .checkbox-group {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        display: flex;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+
+    .checkbox-group label {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .btn-save, .btn-cancel {
+        padding: 10px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+        color: white;
+    }
+
+    .btn-save {
+        background-color: #07a6a6;
+    }
+
+    .btn-save:hover {
+        background-color: #068c8c;
+    }
+
+    .btn-cancel {
+        background-color: #999999;
+    }
+
+    .btn-cancel:hover {
+        background-color: #777777;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+</style>
+@code {
+    private class Designer
+    {
+        public string Bio { get; set; }
+        public string PortfolioFileDataUrl { get; set; }
+        public string ProfileImageUrl { get; set; }
+    }
+
+    private Designer designer = new Designer
+        {
+            Bio = "",
+            PortfolioFileDataUrl = "",
+            ProfileImageUrl = ""
+        };
+
+    private string portfolioFileName = "";
+    private bool isAvailable = true;
+    private bool showForm = true;
+
+    private async Task HandlePortfolioUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        portfolioFileName = file.Name;
+
+        // You can read bytes if needed
+        using var stream = file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        var bytes = ms.ToArray();
+
+        // Optional: Save to server or display file size
+        Console.WriteLine($"Uploaded portfolio: {file.Name} ({bytes.Length} bytes)");
+    }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        using var stream = file.OpenReadStream(maxAllowedSize: 2 * 1024 * 1024);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        var base64 = Convert.ToBase64String(ms.ToArray());
+        var imageDataUrl = $"data:{file.ContentType};base64,{base64}";
+        designer.ProfileImageUrl = imageDataUrl;
+    }
+
+    private async Task SaveProfile()
+    {
+        Console.WriteLine($"Bio: {designer.Bio}");
+        Console.WriteLine($"IsAvailable: {isAvailable}");
+        Console.WriteLine($"Image URL: {designer.ProfileImageUrl?.Substring(0, 30)}...");
+        Console.WriteLine($"Portfolio file: {portfolioFileName}");
+
+        CloseForm();
+    }
+
+    private void CloseForm()
+    {
+        showForm = false;
+        StateHasChanged();
+    }
+}
