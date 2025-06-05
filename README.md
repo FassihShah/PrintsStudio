@@ -25,7 +25,7 @@ PrintsStudio aims to streamline the printing order process by providing a user-f
 - Database: SQL Server
 - Language: C#
 - Authentication: ASP.NET Core Identity with role management (Admin, Designer, Customer)
-- Other: Entity Framework Core for data access, SignalR, Ajax
+- Other: Entity Framework Core for data access, OData, JS Interop, SignalR, Ajax
 
 
 ## Project Structure
