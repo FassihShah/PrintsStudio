@@ -1,41 +1,52 @@
-# PrintsStudio
+# 🖨PrintsStudio – Full Stack Blazor Web Application
 
-PrintsStudio is a modern web application designed for an online printing service. It allows users to upload documents, customize print options, select design templates, place orders, and interact with designers. The project leverages Blazor for the frontend UI and is structured for easy scalability and maintainability.
+**PrintsStudio** is a dynamic, modern full-stack printing service platform built with **Blazor WebAssembly** for the frontend and a **Clean Architecture ASP.NET Core API** on the backend. It allows users to customize, preview, and order printed products such as business cards, wedding invitations, and personalized templates.
 
-
-## Project Overview
-
-PrintsStudio aims to streamline the printing order process by providing a user-friendly platform where customers can easily upload their files, choose customization options, browse design templates, and communicate with designers. The system also includes an admin dashboard to manage products, orders, and designer profiles efficiently.
+> Explore the live experience of role-based dashboards, real-time template customization, and seamless product ordering in a production-grade architecture.
 
 
-## Features
+---
 
-- User registration and authentication
-- Document upload with print customization options
-- Multiple product design templates
-- Designer profiles and availability management
-- Order management system with order item details
-- Admin dashboard for managing products, designers, and orders
-- Responsive UI built with Blazor
+## Key Features
+
+- 🔐 **Role-Based Access** (Admin, Designer, Customer)
+- 🛒 **Customizable Product Ordering**
+- 🎨 **Pre-designed Template Gallery**
+- 👨‍🎨 **Designer Portfolio & Booking System**
+- 📦 **Order Tracking & Management**
+- 📄 **Contact Form, Reviews, FAQs, and More**
+- 💻 **Admin Dashboard** for managing products, templates, users
+
+---
 
 ## Technology Stack
 
-- Frontend: Blazor 
-- Backend: ASP.NET Core
-- Database: SQL Server
-- Language: C#
-- Authentication: ASP.NET Core Identity with role management (Admin, Designer, Customer)
-- Other: Entity Framework Core for data access, OData, JS Interop, SignalR, Ajax
+| Layer       | Technology                               |
+|------------|-------------------------------------------|
+| Frontend   | Blazor WebAssembly (.NET 8), Bootstrap 5  |
+| Backend    | ASP.NET Core Web API                      |
+| Architecture | Clean Architecture (Domain, App, Infra, API) |
+| ORM        | Entity Framework Core (Code First)        |
+| Identity   | ASP.NET Core Identity                     |
+| Tools      | AutoMapper, Dependency Injection, REST    |
 
+---
 
 ## Project Structure
 
-PrintsStudio.sln
+PrintsStudio/
+│
+├── PrintsStudio.Domain/           # Core domain models (Entities, Enums, Interfaces)
+│
+├── PrintsStudio.Application/      # Application logic (CQRS, DTOs, Services)
+│
+├── PrintsStudio.Infrastructure/   # Infrastructure concerns (DB, repositories, file services)
+│
+├── PrintsStudio.Server/           # ASP.NET Core Web API (entry point for backend)
+│
+├── PrintsStudio.Client/          # Blazor WebAssembly frontend (UI logic and components)
+│
+└── PrintsStudio.sln             # Visual Studio solution file
 
-|
-├── PrintsStudio.Client           
-├── PrintsStudio.Server           
-├── PrintsStudio.Domain           
-├── PrintsStudio.Infrastructure   
-├── PrintsStudio.Application           
+---
 
