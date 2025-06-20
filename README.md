@@ -34,18 +34,15 @@
 
 ## Project Structure
 
+```bash
+
 PrintsStudio/
-│
+.
 ├── PrintsStudio.Domain/           # Core domain models (Entities, Enums, Interfaces)
-│
 ├── PrintsStudio.Application/      # Application logic (CQRS, DTOs, Services)
-│
 ├── PrintsStudio.Infrastructure/   # Infrastructure concerns (DB, repositories, file services)
-│
 ├── PrintsStudio.Server/           # ASP.NET Core Web API (entry point for backend)
-│
 ├── PrintsStudio.Client/          # Blazor WebAssembly frontend (UI logic and components)
-│
 └── PrintsStudio.sln             # Visual Studio solution file
 
 ---
