@@ -1,0 +1,165 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
+      "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\obj\\Debug\\net8.0\\scopedcss\\bundle\\PrintsStudio.Client.styles.css",
+      "PackagePath": "staticwebassets\\PrintsStudio.Client.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\css\\footer.css",
+      "PackagePath": "staticwebassets\\css\\footer.css"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\icon-192.png",
+      "PackagePath": "staticwebassets\\icon-192.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\album.jpg",
+      "PackagePath": "staticwebassets\\images\\album.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\bg-cropped.png",
+      "PackagePath": "staticwebassets\\images\\bg-cropped.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\business card.jpg",
+      "PackagePath": "staticwebassets\\images\\business card.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\business-cards.png",
+      "PackagePath": "staticwebassets\\images\\business-cards.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\color_p.jpeg",
+      "PackagePath": "staticwebassets\\images\\color_p.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\colorp.png",
+      "PackagePath": "staticwebassets\\images\\colorp.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\contact.png",
+      "PackagePath": "staticwebassets\\images\\contact.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\contact_us.jpg",
+      "PackagePath": "staticwebassets\\images\\contact_us.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\flyer.png",
+      "PackagePath": "staticwebassets\\images\\flyer.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\graphic_designer.jpg",
+      "PackagePath": "staticwebassets\\images\\graphic_designer.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\hoddie.jpg",
+      "PackagePath": "staticwebassets\\images\\hoddie.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\hoise.png",
+      "PackagePath": "staticwebassets\\images\\hoise.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\image.png",
+      "PackagePath": "staticwebassets\\images\\image.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\photoalbum.png",
+      "PackagePath": "staticwebassets\\images\\photoalbum.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\poster.jpg",
+      "PackagePath": "staticwebassets\\images\\poster.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\printer.jpg",
+      "PackagePath": "staticwebassets\\images\\printer.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\sticker.png",
+      "PackagePath": "staticwebassets\\images\\sticker.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\stickers.jpg",
+      "PackagePath": "staticwebassets\\images\\stickers.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\tem2.jpg",
+      "PackagePath": "staticwebassets\\images\\tem2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\tshirt.png",
+      "PackagePath": "staticwebassets\\images\\tshirt.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\vec.jpg",
+      "PackagePath": "staticwebassets\\images\\vec.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\wedding card.png",
+      "PackagePath": "staticwebassets\\images\\wedding card.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\wedding cards.jpg",
+      "PackagePath": "staticwebassets\\images\\wedding cards.jpg"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\images\\—Pngtree—printing service illustration concept _4853463.png",
+      "PackagePath": "staticwebassets\\images\\—Pngtree—printing service illustration concept _4853463.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\Users\\dell\\source\\repos\\PrintsStudio\\PrintsStudio.Client\\wwwroot\\sample-data\\weather.json",
+      "PackagePath": "staticwebassets\\sample-data\\weather.json"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.PrintsStudio.Client.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.PrintsStudio.Client.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.PrintsStudio.Client.props",
+      "PackagePath": "build\\PrintsStudio.Client.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.PrintsStudio.Client.props",
+      "PackagePath": "buildMultiTargeting\\PrintsStudio.Client.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.PrintsStudio.Client.props",
+      "PackagePath": "buildTransitive\\PrintsStudio.Client.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

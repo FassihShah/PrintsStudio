@@ -1,0 +1,157 @@
+﻿@page "/all-bookings"
+@inject Services.BookingService bs
+@inject Services.UserService us
+@inject IJSRuntime Js
+@using PrintsStudio.Client.Models
+
+<style>
+    body
+    {
+        background-color: #eef8f8;
+    }
+    .past-orders-container {
+        background-color: #eef8f8;
+        border-radius: 10px;
+        padding: 30px;
+        font-family: 'Lato', sans-serif;
+    }
+
+    .past-orders-header {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .order-card {
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+    }
+
+        .order-card:hover {
+            transform: translateY(-3px);
+        }
+
+    .order-info div {
+        font-size: 1rem;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.4em 0.7em;
+        border-radius: 0.5rem;
+        color: white;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+    }
+
+    .badge-pending {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .badge-cancelled {
+        background-color: #dc3545;
+    }
+
+    .btn-aqua {
+        background-color: #07a6a6;
+        color: white;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+
+        .btn-aqua:hover {
+            background-color: #059595;
+        }
+
+    .no-orders {
+        font-size: 1.4rem;
+        text-align: center;
+        color: #666;
+        margin-top: 2rem;
+    }
+</style>
+
+<!-- PAST ORDERS SECTION -->
+<div class="container-fluid my-5 past-orders-container">
+    <h2 class="past-orders-header">All Bookings</h2>
+    <PrintsStudio.Client.Pages.BreadCrumbComponent />
+
+    @if (bookings.Count == 0)
+    {
+        <div class="no-orders">🛒 No bookings found.</div>
+    }
+    else
+    {
+        @foreach (var o in bookings)
+        {
+            <div class="order-card">
+                <div class="row order-info text-center">
+                    <div class="col-2"><strong>Booking ID</strong><br />@o.id</div>
+                    <div class="col-2"><strong>Date</strong><br />@o.deadline.ToString("dd MMM yyyy")</div>
+                    <div class="col-2"><strong>Budget</strong><br />@o.budget</div>
+                    <div class="col-2">
+                        <strong>Status</strong><br />
+                        <span class="badge @(GetBadgeClass(o.status))">@o.status</span>
+                    </div>
+                    <div class="col-2">
+                        <select class="form-select" @onchange="async e => await UpdateStatus(o.id, e.Value?.ToString())">
+                            <option disabled selected>Update Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    public List<Booking> bookings { get; set; } = new List<Booking>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var id = await Js.InvokeAsync<string>("localStorage.getItem", "userId");
+        var user = await us.GetByIdAsync(id);
+        var Did = user.DesignerProfile.DesignerId;
+        var list = await bs.GetAllAsync();
+        bookings = list.Where(l => l.DesignerId == Did).ToList();
+    }
+
+    public async Task UpdateStatus(int id, string selectedOption)
+    {
+        if (!string.IsNullOrWhiteSpace(selectedOption))
+        {
+            var b = await bs.GetByIdAsync(id);
+            b.status = selectedOption;
+            await bs.UpdateAsync(id, b);
+
+            // Refresh list after update
+            var userId = await Js.InvokeAsync<string>("localStorage.getItem", "userId");
+            var all = await bs.GetAllAsync();
+            bookings = all.Where(l => l.UserId == userId).ToList();
+        }
+    }
+
+    string GetBadgeClass(string status)
+    {
+        return status switch
+        {
+            "Confirmed" => "badge-success",
+            "Pending" => "badge-pending",
+            "Cancelled" => "badge-cancelled",
+            _ => ""
+        };
+    }
+}

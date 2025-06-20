@@ -1,0 +1,317 @@
+﻿@using PrintsStudio.Client.Models
+@using System.IO
+@page "/product-detail/{Id:int}"
+@using System.Text.Json
+@inject PrintsStudio.Client.Services.ProductService ps
+@inject IJSRuntime JS
+@inject HttpClient Http
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    body {
+        font-family: 'Lato', sans-serif;
+        background-color: #f0f0f0;
+    }
+
+    h1, h3, h5, .section-title {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+    }
+
+    .btn-custom {
+        background-color: #07a6a6;
+        color: white;
+    }
+
+        .btn-custom:hover {
+            background-color: #059393;
+        }
+
+    .review-section {
+        background-color: #ceedec;
+        padding: 30px;
+        margin-top: 40px;
+        border-radius: 8px;
+    }
+
+    .review {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-left: 5px solid #07a6a6;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .carousel-item img {
+        height: 400px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1055;
+    }
+
+    .gallery-img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: transform 0.2s;
+    }
+
+        .gallery-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #07a6a6;
+        }
+</style>
+<NavComponent></NavComponent>
+
+<PrintsStudio.Client.Pages.BreadCrumbComponent />
+
+@if (Product == null)
+{
+    <div class="text-center mt-5">
+        <p>Loading product details...</p>
+    </div>
+}
+else
+{
+    <div class="container py-5">
+        <div class="row">
+            <!-- Image Carousel -->
+            <div class="col-md-6 mb-4">
+                @if (Product.Images != null && Product.Images.Count > 1)
+                {
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @for (int i = 1; i < Product.Images.Count; i++)
+                            {
+                                <div class="carousel-item @(i == 1 ? "active" : "")">
+                                    <img src="@($"https://localhost:7032{Product.Images[i]}")" class="d-block w-100" alt="Product Image @(i+1)" />
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-md-6">
+                <h1>@Product.Name</h1>
+                <p class="text-muted">Product ID: #@Product.ProductId</p>
+                <p><strong>Description:</strong></p>
+                <p>@Product.Description</p>
+                <h4 class="mt-3">Price: <span class="text-success">Rs.@Product.BasePrice</span></h4>
+                <button class="btn btn-custom mt-3" data-bs-toggle="modal" data-bs-target="#addToCartModal">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+    <ProductReviewComponent ProductId="@Id"></ProductReviewComponent>
+    <FooterComponent></FooterComponent>
+                            
+                           
+
+    <!-- Add to Cart Modal -->
+    <div class="modal fade" id="addToCartModal" tabindex="-1" aria-labelledby="addToCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background-color: #ceedec;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addToCartModalLabel">Customize Your Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @if (dropDown != null)
+                    {
+                        @for (int i = 0; i < dropDown.Count; i++)
+                        {
+                            var localIndex = i;
+                            <div class="mb-3">
+                                <label class="form-label">@dropDown[i].NameOfOption</label>
+                                <select class="form-select" @onchange="e => OnOptionSelected(localIndex, e.Value.ToString())">
+                                    <option disabled selected>-- Select --</option>
+                                    @foreach (var s in dropDown[i].OptionValues)
+                                    {
+                                        <option value="@s">@s</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                    }
+                    <div class="mb-3 px-3">
+                        <label for="quantityInput" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="quantityInput" min="1" @bind-value="@orderItem.Quantity" />
+                    </div>
+                    <div class="mb-3 px-3">
+                        <label for="designUpload" class="form-label">Upload Your Design</label>
+                        <InputFile OnChange="OnFileChange" class="form-control" />
+                    </div>
+                   @*  <div class="text-center">
+                        <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#designGalleryModal">Or Choose From Gallery</button>
+                    </div> *@
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-custom" data-bs-dismiss="modal" @onclick="ShowToastAsync">Proceed</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Gallery Modal -->
+    <div class="modal fade" id="designGalleryModal" tabindex="-1" aria-labelledby="designGalleryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="background-color: #fff;">
+                <div class="modal-header">
+                    <h5 class="modal-title">Choose a Design Template</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body row g-3 px-3">
+                    @foreach (var template in PredefinedDesigns)
+                    {
+                        <div class="col-md-4">
+                            <img src="@template" class="gallery-img" @onclick="@(() => SelectDesignTemplate(template))" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container">
+        <div class="toast align-items-center text-bg-success border-0" role="alert" id="cartToast" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Product added to cart successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showToast() {
+            var toastElement = document.getElementById('cartToast');
+            var toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+    </script>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Product Product { get; set; }
+    public OrderItem orderItem { get; set; } = new OrderItem
+        {
+            AppliedCustomizations = new List<string>()
+        };
+
+    public List<CustomaizationModel> dropDown = new();
+    public List<string> PredefinedDesigns = new()
+{
+    "https://images.unsplash.com/photo-1602524812519-70c6a9db4c4b",  // Abstract design
+    "https://images.unsplash.com/photo-1611095787235-6e3a77f5c0a6",  // Creative pattern
+    "https://images.unsplash.com/photo-1612832020801-67c5bc7e4a4b",  // Fabric texture
+    "https://images.unsplash.com/photo-1602524813278-3be5c66c88fc",  // Colorful art
+    "https://images.unsplash.com/photo-1622495897321-c47f21914f3a"   // Simple vector background
+};
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Product = await ps.GetByIdAsync(Id);
+        if (Product?.CustomizationOptions != null)
+        {
+            foreach (var c in Product.CustomizationOptions)
+            {
+                dropDown.Add(new CustomaizationModel
+                    {
+                        ProductId = c.ProductId,
+                        CustomizationOptionId = c.CustomizationOptionId,
+                        NameOfOption = c.OptionName,
+                        OptionValues = c.OptionValue?.Split(',').ToList() ?? new List<string>()
+                    });
+            }
+        }
+    }
+
+    private async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            using var content = new MultipartFormDataContent();
+            var stream = file.OpenReadStream(10_000_000);
+            content.Add(new StreamContent(stream), "file", file.Name);
+            var response = await Http.PostAsync("/api/product/upload-image", content);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                if (result != null && !string.IsNullOrEmpty(result.Url))
+                {
+                    orderItem.SelectedDesignTemplateUrl = result.Url;
+                }
+            }
+        }
+    }
+
+    private void SelectDesignTemplate(string url)
+    {
+        orderItem.SelectedDesignTemplateUrl = url;
+    }
+
+    private void OnOptionSelected(int index, string selectedValue)
+    {
+        if (index >= 0 && index < dropDown.Count)
+        {
+            var selectedOption = dropDown[index];
+            var opt = $"{selectedOption.NameOfOption},{selectedValue}";
+            orderItem.AppliedCustomizations.Add(opt);
+        }
+    }
+
+    private async Task ShowToastAsync()
+    {
+        if (Product != null)
+        {
+            orderItem.UnitPrice = Product.BasePrice;
+            orderItem.ProductId = Product.ProductId;
+        }
+        var id = await JS.InvokeAsync<string>("localStorage.getItem", "userId");
+        if(id!=null)
+        {
+            var k = id + "cart";
+            var json = await JS.InvokeAsync<string>("localStorage.getItem", k);
+            var list = JsonSerializer.Deserialize<List<OrderItem>>(json);
+            list?.Add(orderItem);
+            var s = JsonSerializer.Serialize(list);
+            await JS.InvokeVoidAsync("localStorage.setItem", k, s);
+
+            await JS.InvokeVoidAsync("showToast");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("showAlert", "You need to login first");
+        }
+
+    }
+
+    public class ImageUploadResult
+    {
+        public string Url { get; set; }
+    }
+}

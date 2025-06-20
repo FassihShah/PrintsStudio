@@ -1,0 +1,73 @@
+﻿@page "/all-inquires"
+@using PrintsStudio.Client.Models
+@inject PrintsStudio.Client.Services.ContactFormService contactService
+<style>
+    body {
+        background-color: #ceedec;
+        font-family: 'Lato', sans-serif;
+        padding: 2rem;
+    }
+
+    .heading {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .table thead {
+        background-color: #07a6a6;
+        color: white;
+        font-family: 'Merriweather', serif;
+    }
+
+    .table tbody tr:hover {
+        background-color: #e0f7f7;
+    }
+
+</style>
+<h2 class="heading">Contact Messages</h2>
+
+@if (contactMessages == null)
+{
+    <p>Loading...</p>
+}
+else if (contactMessages.Count == 0)
+{
+    <p>No contact messages yet.</p>
+}
+else
+{
+    <div class="table-responsive mt-4">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var msg in contactMessages)
+                {
+                    <tr>
+                        <td>@msg.Id</td>
+                        <td>@msg.Name</td>
+                        <td>@msg.Email</td>
+                        <td>@msg.Message</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<ContactForm>? contactMessages=new List<ContactForm>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        contactMessages = await contactService.GetAllAsync();
+    }
+}

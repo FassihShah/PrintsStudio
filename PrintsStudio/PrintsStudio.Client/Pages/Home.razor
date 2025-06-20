@@ -1,0 +1,25 @@
+﻿@page "/"
+@page "/Home/{role}"
+
+<NavComponent Role="@role" />
+<HeroComponent></HeroComponent> 
+ <CaourselComponent></CaourselComponent> 
+<AboutUsComponent></AboutUsComponent>
+ <TrendingNowComponent></TrendingNowComponent>
+<DesignerComponent></DesignerComponent>
+<ReviewCarouselComponent></ReviewCarouselComponent>
+<FooterComponent></FooterComponent>
+ 
+
+@code
+{
+    [Parameter]
+    public string? role { get; set; }
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrEmpty(role))
+        {
+            role = "Visitor";
+        }
+    }
+}

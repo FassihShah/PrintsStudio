@@ -1,0 +1,193 @@
+is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = scd_project
+build_property.RootNamespace = scd_project
+build_property.ProjectDir = C:\Users\dell\source\repos\scd_project\scd_project\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = false
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\dell\source\repos\scd_project\scd_project
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/AboutUsComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWJvdXRVc0NvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/AddProductComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRkUHJvZHVjdENvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/AddToCardComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRkVG9DYXJkQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/AdminComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5Db21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/AllBookingsComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWxsQm9va2luZ3NDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/AllInquiresComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWxsSW5xdWlyZXNDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/AllOrdersComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWxsT3JkZXJzQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/BookingComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQm9va2luZ0NvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/BreadCrumbComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQnJlYWRDcnVtYkNvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/CaourselComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FvdXJzZWxDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/CatalogueComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2F0YWxvZ3VlQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/ConfirmOrderComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29uZmlybU9yZGVyQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/ContactUsComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29udGFjdFVzQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/DesignerCardComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVzaWduZXJDYXJkQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/DesignerCatalogueComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVzaWduZXJDYXRhbG9ndWVDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/DesignerComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVzaWduZXJDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/DesignerFormComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVzaWduZXJGb3JtQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/DesignerProfileComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVzaWduZXJQcm9maWxlQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/DisplayAllDesignersComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGlzcGxheUFsbERlc2lnbmVyc0NvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/DisplayAllOrdersComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGlzcGxheUFsbE9yZGVyc0NvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/DisplayAllProductComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGlzcGxheUFsbFByb2R1Y3RDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/DisplayAllUsersComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGlzcGxheUFsbFVzZXJzQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/FaqComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmFxQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/FooterComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9vdGVyQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/GalleryComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2FsbGVyeUNvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/HeroComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSGVyb0NvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/LoginComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5Db21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/NavComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTmF2Q29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/ProductCardComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdENhcmRDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/ProductDetailsComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdERldGFpbHNDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/ProductReviewComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdFJldmlld0NvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/ReviewCarouselComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmV2aWV3Q2Fyb3VzZWxDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/ReviewFormComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmV2aWV3Rm9ybUNvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/SignUPComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2lnblVQQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/TrendingNowComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJlbmRpbmdOb3dDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/UploadDesignComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXBsb2FkRGVzaWduQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Pages/WhatWeDoComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2hhdFdlRG9Db21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-x8whhv90rx
+
+[C:/Users/dell/source/repos/scd_project/scd_project/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-8n2p4rlcn2

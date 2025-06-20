@@ -1,0 +1,113 @@
+﻿@page "/all-designers"
+@inject PrintsStudio.Client.Services.DesignerService ds
+@using PrintsStudio.Client.Models
+<style>
+    body {
+        background-color: #ceedec;
+        font-family: 'Lato', sans-serif;
+    }
+
+    .page-heading {
+        color: #242f66;
+        font-family: 'Merriweather', serif;
+        text-align:center;
+        margin:20px;
+    }
+
+    .page-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .styled-table th {
+        background-color: #07a6a6;
+        color: white;
+    }
+
+    .btn-delete {
+        background-color: #e54f6d;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-delete:hover {
+        background-color: #c13f5a;
+    }
+</style>
+
+<h2 class="page-heading">Manage Designers</h2>
+<div class="page-container">
+    @if (users == null)
+
+    {
+        <p>Loading designers...</p>
+    }
+
+    else
+
+    {
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Designer Id</th>
+                    <th>User Id</th>
+                    <th>Portfolio Url</th>
+                    <th>Available</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in users)
+
+                {
+                    <tr>
+                        <td>@user.DesignerId</td>
+                        <td>@user.UserId</td>
+                        <td><url>@user.PortfolioUrl</url></td>
+                        <td>@(user?.IsAvailable == true ? "Yes" : "No")</td>
+                        <td><button class="btn-delete" @onclick="() => DeleteUser(user.DesignerId)">Delete</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+
+
+
+    List<Designer> users;
+    protected override async Task OnInitializedAsync()
+    {
+
+        users = await ds.GetAllAsync();
+
+    }
+    public async Task DeleteUser(int id)
+    {
+
+        await ds.DeleteAsync(id);
+
+        users = await ds.GetAllAsync();
+
+    }
+}

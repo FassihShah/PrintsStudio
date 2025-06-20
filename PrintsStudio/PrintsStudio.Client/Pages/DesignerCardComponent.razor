@@ -1,0 +1,60 @@
+﻿@page "/designer-card"
+@inject Services.UserService Us
+@using PrintsStudio.Client.Models
+<style>
+    .custom
+    {
+        background-color: #ceedec;
+    }
+    .bu
+    {
+        background-color:#07a6a6;
+        
+    }
+    .xy
+    {
+        color: #242f66;
+        font-family: 'Merriweather', serif;
+    }
+    .bu:hover
+    {
+        background-color: #07a6a6;
+    }
+    
+</style>
+
+<div class="card shadow rounded-4 text-center custom" style="width: 15rem; font-family: 'Lato', sans-serif;">
+    <img src="/images/bg-cropped.png" class="card-img-top rounded-circle mx-auto mt-3" alt="Profile Picture" style="width: 120px; height: 120px; object-fit: cover;" />
+
+    <div class="card-body ">
+        <h5 class="card-title fw-bold xy">@name</h5>
+        <p class="card-text text-muted">
+            @if (designer.IsAvailable== true)
+            {
+                <span class="badge bu">Available for Work</span>
+            }
+            else
+            {
+                <span class="badge bg-secondary">Currently Unavailable</span>
+            }
+        </p>
+        <a href="@($"/about-me/{designer.DesignerId}")" class="btn bg-success fw-medium">View Profile</a>
+        <a href="@($"/booking/{designer.DesignerId}")" class="btn  fw-medium  mt-2 bu">Book Now</a>
+    </div>
+</div>
+
+@code {
+
+    [Parameter] 
+    public Designer designer { get; set; }
+
+    public string name { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        if (designer != null)
+        {
+            var user = await Us.GetByIdAsync(designer.UserId);
+            name = user.FullName; 
+        }
+    }
+}

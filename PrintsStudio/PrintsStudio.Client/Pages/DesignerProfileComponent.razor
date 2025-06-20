@@ -1,0 +1,109 @@
+﻿@page "/about-me/{id:int}"
+@using PrintsStudio.Client.Models
+@inject NavigationManager Navigation
+@inject Services.UserService Us
+@inject Services.DesignerService Ds
+
+@if (designer != null && user != null)
+{
+    <div class="py-5" style="background-color: #ceedec; font-family: 'Lato', sans-serif;">
+
+        <PrintsStudio.Client.Pages.BreadCrumbComponent />
+        <div class="container">
+            <div class="row align-items-center flex-lg-row-reverse">
+                <div class="col-lg-6 text-center">
+                    <img src="@user.ProfileImageUrl" class="img-fluid rounded-circle" alt="Avatar">
+                </div>
+                <div class="col-lg-6">
+                    <div>
+                        <h3 class="mb-3" style="color: #242f66; font-family: 'Merriweather', serif;">About Me</h3>
+                        <h6 class="mb-3 text-danger">@designer.Bio</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <span class="fw-bold" style="color: #07a6a6;">Name:</span>
+                                    <p>@user.FullName</p>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="fw-bold" style="color: #07a6a6;">Education:</span>
+                                    <p>@designer.DesignerId</p>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="fw-bold" style="color: #07a6a6;">
+                                        <a href="@designer.PortfolioUrl"> Portfolio</a>
+                                    </span>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="fw-bold" style="color: #07a6a6;">Skills:</span>
+                                    <p>Graphic Designer</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <span class="fw-bold" style="color: #07a6a6;">E-mail:</span>
+                                    <p>@user.Email</p>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="fw-bold" style="color: #07a6a6;">Phone:</span>
+                                    <p>@user.PhoneNumber</p>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="fw-bold" style="color: #07a6a6;">Status:</span>
+                                    <p>@designer.IsAvailable.ToString()</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row text-center mt-5">
+                <div class="col-6 col-lg-3 mb-3">
+                    <div class="py-3 rounded shadow-sm" style="background-color: #ffffff;">
+                        <h6 class="h2" style="color: #242f66; font-weight: 700;">12</h6>
+                        <p class="mb-0 fw-semibold">Happy Clients</p>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3 mb-3">
+                    <div class="py-3 rounded shadow-sm" style="background-color: #ffffff;">
+                        <h6 class="h2" style="color: #242f66; font-weight: 700;">12</h6>
+                        <p class="mb-0 fw-semibold">Project Completed</p>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3 mb-3">
+                    <div class="py-3 rounded shadow-sm" style="background-color: #ffffff;">
+                        <h6 class="h2" style="color: #242f66; font-weight: 700;">13</h6>
+                        <p class="mb-0 fw-semibold">Positive Reviews</p>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3 mb-3">
+                    <div class="py-3 rounded shadow-sm" style="background-color: #ffffff;">
+                        <h6 class="h2" style="color: #242f66; font-weight: 700;">14</h6>
+                        <p class="mb-0 fw-semibold">Client Satisfaction</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-center mt-5">Loading profile...</p>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    public Designer designer { get; set; }
+    public UserDTO user { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        designer = await Ds.GetByIdAsync(id);
+        if (designer != null)
+        {
+            user = await Us.GetByIdAsync(designer.UserId);
+        }
+    }
+}

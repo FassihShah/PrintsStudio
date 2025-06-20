@@ -1,0 +1,358 @@
+﻿@page "/cart"
+@inject Services.OrderItemService ois
+@inject Services.OrderService os
+@inject IJSRuntime Js
+@using System.Text.Json
+@using PrintsStudio.Client.Models
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato&family=Merriweather&display=swap" rel="stylesheet">
+
+<style>
+    #b {
+        background-color: #ceedec;
+        font-family: 'Lato', sans-serif;
+    }
+
+    #h {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+    }
+
+    .cart-container {
+        background-color: #eef8f8;
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-header {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
+
+    .cart-table {
+        background-color: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+        .cart-table img {
+            width: 100px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+    .cart-row {
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+    }
+
+    .btn-aqua {
+        background-color: #07a6a6;
+        color: white;
+        font-weight: 500;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+    }
+
+        .btn-aqua:hover {
+            background-color: #059595;
+        }
+
+    .total-bar {
+        background-color: #07a6a6;
+        color: white;
+        border-radius: 10px;
+        padding: 18px 25px;
+        text-align: end;
+        font-size: 1.2rem;
+        margin-top: 20px;
+    }
+
+    .cart-actions {
+        text-align: end;
+        margin-top: 20px;
+    }
+
+    .modal-content {
+        border-radius: 12px;
+    }
+
+    .modal-header, .modal-footer {
+        border: none;
+    }
+
+    .toast {
+        font-size: 0.95rem;
+        border-radius: 10px;
+        padding: 10px 15px;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .form-check-label a {
+        text-decoration: underline;
+        color: #07a6a6;
+    }
+
+    .alert-danger {
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+</style>
+
+
+<body id="b">
+    <PrintsStudio.Client.Pages.BreadCrumbComponent />
+    <div class="container-fluid my-5 cart-container">
+        <h2 class="cart-header" id="h">Shopping Cart <span class="fs-5">(@Items.Count item(s) in your cart)</span></h2>
+
+       
+        <div class="cart-table mt-4 p-3">
+            <div class="row align-items-center text-center fw-bold mb-3 cart-row">
+                <div class="col-2">Product id</div>
+                <div class="col-2">Selected Customaizations</div>
+                <div class="col-2">Quantity</div>
+                <div class="col-2">Price</div>
+                <div class="col-2">Total</div>
+
+            </div>
+            <div>
+                @if (Items == null || Items.Count == 0)
+                {
+                    <h4>Nothing To Display</h4>
+                }
+                else
+                {
+                    @for (int j = 0; j < Items.Count; j++)
+                    {
+                        var i = Items[j];
+                        <div class="row align-items-center text-center mb-3">
+                            <div class="col-2">@i.ProductId</div>
+                            <div class="col-2">@i.AppliedCustomizations.Count</div>
+                            <div class="col-2">@i.Quantity</div>
+                            <div class="col-2">@i.UnitPrice.ToString("C")</div>
+                            <div class="col-2">@((i.Quantity * i.UnitPrice).ToString("C"))</div>
+                          
+                        </div>
+                    }
+
+                }
+            </div>
+        </div>
+
+        <div class="total-bar mt-4 ">
+            Order total : @Total.ToString("C")
+        </div>
+        <div class="cart-actions">
+            <button class="btn btn-aqua" @onclick="OpenConfirmModal" disabled="@(Items == null || Items.Count == 0)">Confirm Order</button>
+        </div>
+    </div>
+
+        <AllOrdersComponent Orders="Orders"></AllOrdersComponent>
+
+
+
+     
+
+
+    <!-- Confirm Order Modal -->
+    @if (IsConfirmModalOpen)
+    {
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Your Order</h5>
+                        <button type="button" class="btn-close" aria-label="Close" @onclick="CloseConfirmModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Total Amount:</strong> @Total.ToString("C")</p>
+
+                        <div class="mb-3">
+                            <label for="addressInput" class="form-label">Delivery Address</label>
+                            <textarea id="addressInput" class="form-control" rows="3" @bind="DeliveryAddress"></textarea>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="termsCheck" @bind="TermsAccepted" />
+                            <label class="form-check-label" for="termsCheck">
+                                I agree to the <a href="#" target="_blank">terms and conditions</a>.
+                            </label>
+                        </div>
+
+                        @if (ShowValidationError)
+                        {
+                            <div class="alert alert-danger">
+                                Please enter your delivery address and accept the terms.
+                            </div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="CloseConfirmModal">Cancel</button>
+                        <button class="btn btn-aqua" @onclick="SubmitOrder">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Toast notification -->
+    <div style="position: fixed; top: 1rem; right: 1rem; z-index: 1100;">
+        @if (ShowToast)
+        {
+            <div class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        Order placed successfully!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close" @onclick="() => ShowToast = false"></button>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+
+@code {
+    public List<OrderItem> Items { get; set; } = new List<OrderItem>();
+    public List<Order> Orders { get; set; } = new List<Order>();
+
+    public decimal Total { get; set; } = 0;
+
+    private bool IsConfirmModalOpen = false;
+    private bool ShowToast = false;
+    private bool TermsAccepted = false;
+    private bool ShowValidationError = false;
+    private string DeliveryAddress = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var temp = await os.GetAllAsync();
+        var id = await Js.InvokeAsync<string>("localStorage.getItem", "userId");
+        if(id!=null)
+        {
+            var k = id + "cart";
+            var json = await Js.InvokeAsync<string>("localStorage.getItem", k);
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                Items = JsonSerializer.Deserialize<List<OrderItem>>(json);
+            }
+            else
+            {
+                Items = new List<OrderItem>();
+            }
+            if (Items != null)
+            {
+
+                Total = 0;
+                foreach (var c in Items)
+                {
+                    Total += c.UnitPrice * c.Quantity;
+                }
+            }
+
+            Orders = temp.Where(o => o.UserId == id).ToList();
+        }
+    }
+
+    private void OpenConfirmModal()
+    {
+        DeliveryAddress = string.Empty;
+        TermsAccepted = false;
+        ShowValidationError = false;
+        IsConfirmModalOpen = true;
+    }
+
+    private void CloseConfirmModal()
+    {
+        IsConfirmModalOpen = false;
+    }
+    private async void Remove(int id)
+    {
+        Items.RemoveAt(id);
+        Total = Items.Sum(i => i.UnitPrice * i.Quantity);
+        StateHasChanged();
+
+        var userId = await Js.InvokeAsync<string>("localStorage.getItem", "userId");
+        if (!string.IsNullOrEmpty(userId))
+        {
+            var key = userId + "cart";
+            var updatedJson = JsonSerializer.Serialize(Items);
+            await Js.InvokeVoidAsync("localStorage.setItem", key, updatedJson);
+        }
+
+        StateHasChanged();
+    }
+
+
+    private async Task SubmitOrder()
+    {
+
+        if (string.IsNullOrWhiteSpace(DeliveryAddress) || !TermsAccepted)
+        {
+            ShowValidationError = true;
+            return;
+        }
+
+        ShowValidationError = false;
+        var userId = await Js.InvokeAsync<string>("localStorage.getItem", "userId");
+
+        // 1. Create Order first
+        var newOrder = new Order
+                {
+                    UserId = userId,
+                    OrderDate = DateTime.Now,
+                    Status = OrderStatus.Pending,
+                    TotalPrice = Total,
+                    DeliveryAddress = DeliveryAddress,
+                    Items=new List<OrderItem>()
+                };
+
+        var response = await os.CreateAsync(newOrder);
+        var createdOrder = await response.Content.ReadFromJsonAsync<Order>();
+
+        // 2. Create each OrderItem with correct OrderId
+        Console.WriteLine(Items.Count);
+        Console.WriteLine(createdOrder.OrderId);
+        foreach (var item in Items)
+        {
+            item.OrderId = createdOrder.OrderId;
+            await ois.CreateAsync(item);
+        }
+
+        // 3. fetch back updated list of orderitems for this order
+        // var temp= await ois.getallasync();
+        // var final = temp.where(o => o.orderid == createdorder.orderid).tolist();
+        // neworder.items = final;
+        // await os.updateasync(createdorder.orderid, neworder);
+
+        // 4. Add to list of user's orders if you want to display in the UI
+        
+
+        // 5. Clear cart
+        Items.Clear();
+        Total = 0;
+        var n = new List<OrderItem>();
+        string s = JsonSerializer.Serialize(n);
+            await Js.InvokeVoidAsync("localStorage.setItem", userId + "cart",s);
+
+            IsConfirmModalOpen = false;
+            ShowToast = true;
+            StateHasChanged();
+
+            // 6. Hide toast
+            await Task.Delay(3000);
+            ShowToast = false;
+            StateHasChanged();
+        }
+
+    }
+
+}

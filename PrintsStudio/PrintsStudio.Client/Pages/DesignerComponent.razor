@@ -1,0 +1,98 @@
+﻿@page "/designer"
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+    .split-section {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .split-section img {
+            width: 100%;
+            object-fit: cover;
+        }
+
+    .custom_image {
+        height: 400px; /* Fixed height for both images */
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .split-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #242f66;
+    }
+
+    .bg-blue-overlay {
+       
+        background-color: rgba(36, 47, 102, 0.85); /* Blue with opacity */
+    }
+
+    .bg-green-overlay {
+        background-color: rgba(7, 166, 166, 0.8); /* Green with opacity */
+    }
+
+    .highlight-dot {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background-color: #ceedec;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
+
+    .cta-link {
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+    }
+    h4
+    {
+        color: #242f66;
+        font-family: 'Merriweather', serif;
+    }
+
+        .cta-link:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<div class="container-fluid px-0">
+    <div class="row g-0">
+        <div class="col-md-6 split-section">
+            <img src="/images/tem2.jpg" alt="Photobook" class="custom_image">
+            <div class="split-overlay bg-blue-overlay">
+                <div>
+                    <span class="highlight-dot"></span>
+                    <h3 class="fw-bold" style="color:#07a6a6">Discover resources and templates<br>that will help your business succeed.</h3>
+                    <a href="/gallery" class="cta-link mt-2 d-inline-block">Discover now →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 split-section">
+            <img src="/images/graphic_designer.jpg" alt="Custom Card" class="custom_image">
+            <div class="split-overlay bg-green-overlay">
+                <div>
+                    <span class="highlight-dot"></span>
+                    <h3 class="fw-bold">Get your own custom design<br>created by an expert.</h3>
+                    <a href="/designers" class="cta-link mt-2 d-inline-block">Discover now →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+@code {
+}

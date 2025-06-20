@@ -1,0 +1,151 @@
+﻿@page "/all-products"
+@inject HttpClient Http
+@inject PrintsStudio.Client.Services.ProductService ps
+@inject PrintsStudio.Client.Services.ProductDesignTemplateService pt
+@using PrintsStudio.Client.Models
+
+<style>
+    body {
+        background-color: #ceedec;
+        font-family: 'Lato', sans-serif;
+    }
+
+    .page-heading {
+        color: #242f66;
+        font-family: 'Merriweather', serif;
+        margin: 20px;
+        text-align: center;
+    }
+
+    .page-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+        .styled-table th,
+        .styled-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .styled-table th {
+            background-color: #07a6a6;
+            color: white;
+        }
+
+    .btn-delete {
+        background-color: #e54f6d;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .btn-delete:hover {
+            background-color: #c13f5a;
+        }
+</style>
+
+<h2 class="page-heading">All Products</h2>
+<div class="page-container">
+    @if (products == null)
+    {
+        <p>Loading products...</p>
+    }
+    else if (products.Count == 0)
+    {
+        <p>No products found.</p>
+    }
+    else
+    {
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Id</th>
+                    <th>Price</th>
+                    <th>Customizations</th>
+                    <th>Add Template</th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in products)
+                {
+                    <tr>
+                        <td>@product?.Name</td>
+                        <td>@product?.ProductId</td>
+                        <td>@product?.BasePrice.ToString("C")</td>
+                        <td>@(product?.CustomizationOptions?.Count ?? 0)</td>
+                        <td>
+                            <InputFile OnChange="@(e => OnFileChange(e, product?.ProductId ?? 0))" class="form-control" />
+                        </td>
+                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    List<Product>? products;
+    ProductDesignTemplate productDesignTemplate = new ProductDesignTemplate();
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ps.GetAllAsync();
+    }
+
+    public class ImageUploadResult
+    {
+        public string Url { get; set; } = string.Empty;
+    }
+
+    private async Task OnFileChange(InputFileChangeEventArgs e, int productId)
+    {
+        var file = e.File;
+        if (file == null || productId == 0)
+            return;
+
+        try
+        {
+            using var content = new MultipartFormDataContent();
+            var stream = file.OpenReadStream(10_000_000);
+            content.Add(new StreamContent(stream), "file", file.Name);
+
+            var response = await Http.PostAsync("/api/product/upload-image", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+
+                if (result != null && !string.IsNullOrWhiteSpace(result.Url))
+                {
+                    var newTemplate = new ProductDesignTemplate
+                        {
+                            TemplateImageUrl = result.Url,
+                            ProductId = productId
+                        };
+
+                    await pt.CreateAsync(newTemplate);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"File upload failed: {ex.Message}");
+        }
+    }
+}

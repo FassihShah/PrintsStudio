@@ -1,0 +1,219 @@
+﻿@page "/add-product"
+@using PrintsStudio.Client.Models
+@inject NavigationManager Navigation
+@inject HttpClient Http
+@inject PrintsStudio.Client.Services.ProductService ps
+@inject PrintsStudio.Client.Services.CustomizationOptionService cos
+
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+    .bg-aqua {
+        background-color: #07a6a6;
+    }
+
+        .bg-aqua:hover {
+            background-color: #059494;
+        }
+
+    .bg-blue-deep {
+        background-color: #242f66;
+    }
+
+        .bg-blue-deep:hover {
+            background-color: #1b234d;
+        }
+
+    .bg-light-aqua {
+        background-color: #ceedec;
+    }
+
+    .ring-aqua:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #07a6a6;
+    }
+
+    .heading {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+    }
+
+    .content {
+        font-family: 'Lato', sans-serif;
+        color: #242f66;
+    }
+
+    .thumbnail {
+        max-height: 80px;
+        margin-right: 10px;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="p-5 rounded-4 shadow-lg bg-light-aqua content w-100" style="max-width: 800px;">
+        <h2 class="heading text-center mb-4">Add New Product</h2>
+
+        <!-- Product Name -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Product Name</label>
+            <input class="form-control ring-aqua" @bind="product.Name" />
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea class="form-control ring-aqua" rows="3" @bind="product.Description"></textarea>
+        </div>
+
+        <!-- Base Price -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Base Price</label>
+            <input type="number" class="form-control ring-aqua" @bind="product.BasePrice" />
+        </div>
+
+        <!-- Product Images Upload -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold me-2">Upload Product Images</label>
+
+            @for (int i = 0; i < product.Images.Count; i++)
+            {
+                <div class="mb-3 border p-2 rounded">
+                    <InputFile OnChange="@(e => UploadProductImage(e, i))" class="form-control mb-2" />
+
+                    @if (!string.IsNullOrWhiteSpace(product.Images[i]))
+                    {
+                        <img src="@product.Images[i]" class="thumbnail shadow-sm" />
+                        <div class="small text-truncate" style="max-width: 80px;">
+                            @product.Images[i].Split('/').Last()
+                        </div>
+                    }
+
+                    <button class="btn btn-danger mt-2" @onclick="@(() => RemoveImage(i))">✕ Remove</button>
+                </div>
+            }
+
+            <button class="btn bg-aqua text-white fw-medium px-3" @onclick="AddImage">+ Add Image</button>
+        </div>
+
+        <!-- Customization Options -->
+        <div class="mb-4">
+            <label class="form-label fw-semibold me-2">Customization Options</label>
+            @foreach (var option in product.CustomizationOptions)
+            {
+                <div class="row g-2 mb-2">
+                    <div class="col-md-4">
+                        <input class="form-control ring-aqua" placeholder="Option Name" @bind="option.OptionName" />
+                    </div>
+                    <div class="col-md-6">
+                        <input class="form-control ring-aqua" placeholder="Option Value" @bind="option.OptionValue" />
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-danger w-100" @onclick="@(() => RemoveOption(option))">✕</button>
+                    </div>
+                </div>
+            }
+            <button class="btn bg-aqua text-white fw-medium px-3" @onclick="AddOption">+ Add Option</button>
+        </div>
+
+        <!-- Save Button -->
+        <div class="text-center">
+            <button class="btn bg-blue-deep text-white fw-semibold px-4 py-2 rounded-pill" @onclick="SaveProduct">Save Product</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    public Product product = new Product
+        {
+            Name = "",
+            Description = "",
+            BasePrice = 0,
+            Images = new List<string>(),
+            CustomizationOptions = new List<CustomizationOption>(),
+            Reviews = new List<Review>()
+        };
+
+    public int temp { get; set; }
+
+    private void AddImage()
+    {
+        product.Images.Add(""); // Add placeholder for uploaded image URL
+    }
+
+    private void RemoveImage(int index)
+    {
+        if (index >= 0 && index < product.Images.Count)
+            product.Images.RemoveAt(index);
+    }
+
+    private async Task UploadProductImage(InputFileChangeEventArgs e, int index)
+    {
+        var file = e.File;
+
+        if (file != null)
+        {
+            using var content = new MultipartFormDataContent();
+            var stream = file.OpenReadStream(10_000_000); // 10MB limit
+            content.Add(new StreamContent(stream), "file", file.Name);
+
+            var response = await Http.PostAsync("/api/product/upload-image", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                product.Images.Add(result.Url);
+            }
+        }
+    }
+
+    private void AddOption()
+    {
+        product.CustomizationOptions.Add(new CustomizationOption { OptionName = "", OptionValue = "" });
+    }
+
+    private void RemoveOption(CustomizationOption option)
+    {
+        product.CustomizationOptions.Remove(option);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await ps.CreateAsync(product);
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Server Error: " + error);
+        }
+
+        var savedProduct = await response.Content.ReadFromJsonAsync<Product>();
+        temp = savedProduct.ProductId;
+        Console.WriteLine(temp);
+    }
+
+    private async Task SaveProduct()
+    {
+        product.ProductId = temp;
+        var x = await ps.GetByIdAsync(temp);
+
+        foreach (var option in product.CustomizationOptions)
+        {
+            option.ProductId = product.ProductId;
+            await cos.CreateAsync(option);
+        }
+
+        await ps.UpdateAsync(product.ProductId, product);
+        Navigation.NavigateTo("/admin-panel");
+
+        // Optionally navigate or show success message
+    }
+
+    public class ImageUploadResult
+    {
+        public string Url { get; set; } = string.Empty;
+    }
+}
+

@@ -1,0 +1,177 @@
+﻿@page "/signup"
+@inject HttpClient Http
+@inject Services.UserService US
+@inject IJSRuntime Js
+@inject NavigationManager NavigationManager
+@using PrintsStudio.Client.Models
+<style>
+    .signup-container {
+        background-color: #ceedec;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Lato', sans-serif;
+        padding: 1rem;
+    }
+
+    .signup-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        max-width: 800px;
+        width: 100%;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h3 {
+        color: #242f66;
+        font-family: 'Merriweather', serif;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .profile-preview {
+        max-width: 100px;
+        max-height: 100px;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+    }
+
+    .signup-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: #242f66;
+    }
+
+        .signup-footer a {
+            color: #07a6a6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+            .signup-footer a:hover {
+                text-decoration: underline;
+            }
+</style>
+
+<div class="signup-container">
+    <div class="signup-card">
+        <h3>Create an Account</h3>
+        <EditForm Model="@registerModel" OnValidSubmit="HandleRegister">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <InputText id="fullName" @bind-Value="registerModel.FullName" class="form-control" placeholder="Your Full Name" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <InputText id="email" type="email" @bind-Value="registerModel.Email" class="form-control" placeholder="Your Email" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="phoneNumber" class="form-label">Phone Number</label>
+                    <InputText id="phoneNumber" @bind-Value="registerModel.PhoneNumber" class="form-control" placeholder="Your Phone Number" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <select id="role" class="form-select" @bind="registerModel.Role">
+                        <option value="">Select Role</option>
+                        <option value="Customer">Customer</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Designer">Designer</option>
+                    </select>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label for="profileImage" class="form-label">Upload Profile Image</label>
+                    <InputFile id="profileImage" OnChange="HandleProfileImageChange" class="form-control" />
+                    
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <InputText id="password" type="password" @bind-Value="registerModel.Password" class="form-control" placeholder="Password" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <InputText id="confirmPassword" type="password" @bind-Value="registerModel.ConfirmPassword" class="form-control" placeholder="Confirm Password" />
+                </div>
+            </div>
+
+            <div class="mb-3 text-center">
+                <button type="submit" class="btn btn-primary text-center w-50" style="background-color: #07a6a6; border: none;">
+                    Sign Up
+                </button>
+            </div>
+        </EditForm>
+
+        <div class="signup-footer">
+            <p>Already have an account? <a href="/login">Log In</a></p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegisterModel registerModel = new();
+    private string? profileImageUrl;
+
+    private async Task HandleRegister()
+    {
+        if (registerModel.Password != registerModel.ConfirmPassword)
+        {
+            await Js.InvokeVoidAsync("showAlert", "Password does not matches");
+            return;
+        }
+
+        var response = await Http.PostAsJsonAsync("/api/user/register", registerModel);
+        if (response.IsSuccessStatusCode)
+        {
+            await US.RegisterAsync(registerModel);
+            //alert popup
+            NavigationManager.NavigateTo("/login");
+
+        }
+        else
+        {
+            await Js.InvokeVoidAsync("showAlert", "Email already taken");
+        }
+    }
+
+    private async Task HandleProfileImageChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+
+        var content = new MultipartFormDataContent();
+        var streamContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024));
+        streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+        content.Add(streamContent, "file", file.Name);
+
+        var response = await Http.PostAsync("/api/user/upload-profile-image", content);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<UploadResponse>();
+            profileImageUrl = result?.Url;
+            string s = "https://localhost:7032";
+            registerModel.ProfileImageUrl = s+result?.Url;
+        }
+        else
+        {
+            // Show error uploading image
+        }
+    }
+
+
+    public class UploadResponse
+    {
+        public string Url { get; set; } = "";
+    }
+}

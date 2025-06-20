@@ -1,0 +1,90 @@
+﻿@page "/booking/{Id:int}"
+@using PrintsStudio.Client.Models
+@inject Services.BookingService bs
+@inject HttpClient Http
+@inject IJSRuntime js
+
+<div class="booking-container" style="background-color: #ceedec; min-height: 100vh;">
+    <div class="container py-5">
+        <h1 class="text-center mb-4" style="color: #242f66; font-family: 'Merriweather', serif;">
+            Design Booking Request
+        </h1>
+
+        <div class="card shadow-sm" style="max-width: 800px; margin: 0 auto;">
+            <div class="card-body p-4">
+                <EditForm Model="@Booking" OnValidSubmit="@HandleSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="mb-3">
+                        <label for="details" class="form-label" style="font-family: 'Lato', sans-serif;">Project Details</label>
+                        <InputTextArea id="details" class="form-control" rows="4" @bind-Value="@Booking.details" />
+                        <ValidationMessage For="@(() => Booking.details)" />
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="budget" class="form-label" style="font-family: 'Lato', sans-serif;">Budget ($)</label>
+                            <InputText id="budget" class="form-control" @bind-Value="@Booking.budget" />
+                            <ValidationMessage For="@(() => Booking.budget)" />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="deadline" class="form-label" style="font-family: 'Lato', sans-serif;">Deadline</label>
+                            <InputDate id="deadline" class="form-control" @bind-Value="@Booking.deadline" />
+                            <ValidationMessage For="@(() => Booking.deadline)" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contactDetails" class="form-label" style="font-family: 'Lato', sans-serif;">Contact Details</label>
+                        <InputText id="contactDetails" class="form-control" @bind-Value="@Booking.contactDetails" />
+                        <ValidationMessage For="@(() => Booking.contactDetails)" />
+                    </div>
+
+                    
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary"
+                                style="background-color: #07a6a6; border: none; font-family: 'Lato', sans-serif;">
+                            Submit Booking
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id{ get; set; }
+    private Booking Booking { get; set; } = new Booking
+        {
+            deadline = DateTime.Now.AddDays(7)
+        };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Booking.DesignerId = Id;
+        var id = await js.InvokeAsync<string>("localStorage.getItem", "userId");
+        if(id!=null)
+        {
+            Booking.UserId = id;
+            Booking.status = "Not Accepted";
+        }
+        else
+        {
+            await js.InvokeVoidAsync("alert", "please login or signup");
+        }
+
+    }
+
+    private async Task HandleSubmit()
+    {
+        var response = await bs.CreateAsync(Booking);
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("booking done");
+        }
+    }
+}

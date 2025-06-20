@@ -1,0 +1,131 @@
+﻿@page "/upload-design"
+@using PrintsStudio.Client.Models
+@inject HttpClient Http
+@inject PrintsStudio.Client.Services.ProductService ps
+@inject PrintsStudio.Client.Services.ProductDesignTemplateService pts
+@inject IJSRuntime JS
+
+<style>
+    body {
+        background-color: #ceedec;
+        font-family: 'Lato', sans-serif;
+    }
+
+    h3, label {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+    }
+
+    .form-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        max-width: 600px;
+        margin: 2rem auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+        background-color: #07a6a6;
+        border-color: #07a6a6;
+    }
+
+        .btn-primary:hover {
+            background-color: #065f5f;
+        }
+
+    .form-label {
+        color: #242f66;
+        font-weight: 600;
+    }
+
+    .img-thumbnail {
+        border-radius: 0.75rem;
+        border: 2px solid #ceedec;
+    }
+</style>
+
+<div class="form-container">
+    <h3 class="mb-4 text-center">Upload Product Design Template</h3>
+
+    <EditForm Model="@template" OnValidSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label class="form-label">Select Product</label>
+            <InputSelect class="form-select" @bind-Value="template.ProductId">
+                <option value="">-- Select Product --</option>
+                @foreach (var product in AllProducts)
+                {
+                    <option value="@product.ProductId">@product.Name</option>
+                }
+            </InputSelect>
+        </div>
+
+        
+
+        <div class="mb-3">
+            <label class="form-label">Upload Design Image</label>
+            <InputFile OnChange="UploadProductImage" class="form-control" />
+            @if (!string.IsNullOrEmpty(template.TemplateImageUrl))
+            {
+                <img src="@template.TemplateImageUrl" class="img-thumbnail mt-3" style="max-height: 150px;" />
+            }
+        </div>
+
+        <button class="btn btn-primary w-100" type="submit">Upload</button>
+    </EditForm>
+</div>
+
+@code {
+    private ProductDesignTemplate template = new();
+    private List<Product> AllProducts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllProducts = await ps.GetAllAsync() ?? new List<Product>();
+    }
+
+    private async Task UploadProductImage(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            using var content = new MultipartFormDataContent();
+            var stream = file.OpenReadStream(10_000_000); // 10MB max
+            content.Add(new StreamContent(stream), "file", file.Name);
+
+            var response = await Http.PostAsync("/api/product/upload-image", content);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                template.TemplateImageUrl = result?.Url ?? "";
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Image upload failed.");
+            }
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        var response = await pts.CreateAsync(template);
+
+        if (response.IsSuccessStatusCode)
+        {
+            template = new(); // reset form
+            await JS.InvokeVoidAsync("alert", "Design template uploaded successfully!");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Upload failed. Please try again.");
+        }
+    }
+
+    public class ImageUploadResult
+    {
+        public string Url { get; set; } = string.Empty;
+    }
+}

@@ -1,0 +1,99 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@inject NavigationManager NavManager
+
+<style>
+    .breadcrumb {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0;
+        margin-left:10px;
+        margin-top:5px;
+        margin-bottom:5px;
+        font-family: 'Lato', sans-serif;
+    }
+
+        .breadcrumb li + li::before {
+            content: "›";
+            padding: 0 8px;
+            color: #999;
+        }
+
+        .breadcrumb li a {
+            text-decoration: none;
+            color: #07a6a6;
+            font-weight: 500;
+        }
+
+        .breadcrumb li span {
+            font-weight: bold;
+            color: #242f66;
+        }
+</style>
+
+<ul class="breadcrumb">
+    @foreach (var crumb in Crumbs)
+    {
+        <li>
+            @if (crumb != Crumbs.Last())
+            {
+                <a href="@crumb.Url">@crumb.Label</a>
+            }
+            else
+            {
+                <span>@crumb.Label</span>
+            }
+        </li>
+    }
+</ul>
+
+@code {
+    private List<BreadcrumbItem> Crumbs = new();
+
+    protected override void OnInitialized()
+    {
+        NavManager.LocationChanged += OnLocationChanged;
+        BuildBreadcrumbs();
+    }
+
+    private void OnLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        BuildBreadcrumbs();
+        StateHasChanged(); // Ensures the breadcrumb UI updates
+    }
+
+    private void BuildBreadcrumbs()
+    {
+        var uri = NavManager.ToBaseRelativePath(NavManager.Uri);
+        var segments = uri.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+        Crumbs.Clear();
+
+        // Always add Home
+        Crumbs.Add(new BreadcrumbItem { Label = "Home", Url = "/" });
+
+        string accumulatedUrl = "";
+        foreach (var segment in segments)
+        {
+            accumulatedUrl += "/" + segment;
+            Crumbs.Add(new BreadcrumbItem
+                {
+                    Label = Capitalize(segment),
+                    Url = accumulatedUrl
+                });
+        }
+    }
+
+    private string Capitalize(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return "";
+        input = input.Replace("-", " ");
+        return char.ToUpper(input[0]) + input[1..];
+    }
+
+    private class BreadcrumbItem
+    {
+        public string Label { get; set; }
+        public string Url { get; set; }
+    }
+}

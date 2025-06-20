@@ -1,0 +1,116 @@
+﻿@page "/contact"
+@using PrintsStudio.Client.Models;
+@inject PrintsStudio.Client.Services.ContactFormService contactService
+
+<NavComponent></NavComponent>
+
+<style>
+    body {
+        font-family: 'Lato', sans-serif;
+        background-color: #ceedec;
+    }
+
+    h4 {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+    }
+
+    .btn-theme {
+        background-color: #07a6a6;
+        color: white;
+    }
+
+        .btn-theme:hover {
+            background-color: #055e5e;
+            color: white;
+        }
+
+    .form-control::placeholder {
+        color: #888;
+    }
+
+    .form-control {
+        border: none;
+        padding-left: 15px;
+        font-family: 'Lato', sans-serif;
+    }
+
+    .rounded-4 {
+        border-radius: 1.5rem;
+    }
+</style>
+
+<div class="py-4">
+    <div class="container">
+        <div class="row">
+            <div class="d-flex justify-content-end me-5 mt-2 mb-2">
+               
+            </div>
+        </div>
+
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 text-center mb-4 mb-md-0">
+                <img src="/images/contact.png" alt="Email Icon" class="img-fluid" />
+            </div>
+
+            <div class="col-md-6">
+                <h4 class="mb-4 fw-bold text-center text-md-start">
+                    Get in touch
+                </h4>
+
+                @if (showThankYou)
+                {
+                    <div class="alert alert-success rounded-pill text-center" style="background-color: #07a6a6; color: white;">
+                        Thank you for reaching out!
+                    </div>
+                }
+                else
+                {
+                    <EditForm Model="@formData" OnValidSubmit="HandleSubmit">
+                        <DataAnnotationsValidator />
+                     
+
+                        <div class="mb-3">
+                            <InputText class="form-control rounded-pill" @bind-Value="formData.Name" placeholder=" Name" />
+                            <ValidationMessage For="@(() => formData.Name)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <InputText class="form-control rounded-pill" @bind-Value="formData.Email" placeholder=" Email" />
+                            <ValidationMessage For="@(() => formData.Email)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <InputTextArea class="form-control rounded-4" @bind-Value="formData.Message" placeholder="Message..." rows="4" />
+                            <ValidationMessage For="@(() => formData.Message)" />
+                        </div>
+
+                        <button type="submit" class="btn btn-theme rounded-pill px-5 py-2">
+                            Send
+                        </button>
+                    </EditForm>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ContactForm formData = new();
+    private bool showThankYou = false;
+    private bool isDarkTheme = false;
+
+    private string Theme => isDarkTheme ? "bg-custom-dark text-white" : "bg-custom-light text-dark";
+
+    private void ToggleTheme()
+    {
+        isDarkTheme = !isDarkTheme;
+    }
+
+    private async Task HandleSubmit()
+    {
+        await contactService.SubmitAsync(formData);
+        showThankYou = true;
+    }
+}

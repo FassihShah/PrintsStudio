@@ -1,0 +1,119 @@
+﻿@page "/all-orders"
+@inject PrintsStudio.Client.Services.OrderService os
+@using PrintsStudio.Client.Models
+<style>
+    body {
+        background-color: #ceedec;
+        font-family: 'Lato', sans-serif;
+    }
+
+    .page-heading {
+        color: #242f66;
+        font-family: 'Merriweather', serif;
+        margin: 20px;
+        text-align:center;
+    }
+
+    .page-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .styled-table th {
+        background-color: #07a6a6;
+        color: white;
+    }
+
+    .btn-delete {
+        background-color: #e54f6d;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-delete:hover {
+        background-color: #c13f5a;
+    }
+</style>
+<h2 class="page-heading">All Orders</h2>
+<div class="page-container">
+    @if (orders == null)
+
+    {
+        <p>Loading orders...</p>
+    }
+
+    else
+
+    {
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>User ID</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Change Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in orders)
+
+                {
+                    <tr>
+                        <td>@order.OrderId</td>
+                        <td>@(order.UserId.Length > 10 ? order.UserId.Substring(0, 10) : order.UserId)</td>
+                        <td>@order.OrderDate.ToShortDateString()</td>
+                        <td>@order.Status</td>
+                        <td>@order.TotalPrice.ToString("C")</td>
+                        <td>
+                            <select @onchange="(e) => UpdateStatus(order.OrderId, e.Value.ToString())">
+                                @foreach (var status in Enum.GetValues(typeof(PrintsStudio.Client.Models.OrderStatus)))
+
+                                {
+                                    <option selected="@(status.Equals(order.Status))">@status</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    List<Order> orders;
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await os.GetAllAsync();
+
+    }
+
+    public async Task UpdateStatus(int orderId, string newStatus)
+    {
+        var o = await os.GetByIdAsync(orderId);
+        o.Status = Enum.Parse<OrderStatus>(newStatus);
+        await os.UpdateAsync(orderId,o);
+        orders = await os.GetAllAsync();
+
+    }
+}

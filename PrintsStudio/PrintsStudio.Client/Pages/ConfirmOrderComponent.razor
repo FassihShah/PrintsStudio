@@ -1,0 +1,140 @@
+﻿@* @inject Services.UserCartService uc
+@inject Services.OrderService os
+@inject Services.OrderItemService ois
+@inject IJSRuntime Js
+@using PrintsStudio.Client.Models
+
+
+<style>
+    body {
+        background-color: #ceedec;
+        font-family: 'Lato', sans-serif;
+    }
+
+    h4, label.form-label {
+        color: #242f66;
+        font-family: 'Merriweather', serif;
+    }
+
+    .form-container {
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-custom {
+        background-color: #07a6a6;
+        color: white;
+        border: none;
+    }
+
+    .btn-custom:hover {
+        background-color: #059090;
+    }
+
+    .text-end label {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+    }
+
+    .fs-5 {
+        color: #242f66;
+        font-weight: bold;
+    }
+
+    .table-primary {
+        background-color: #ceedec;
+        color: #242f66;
+    }
+</style>
+
+<form class="form-container">
+    <h4 class="mb-4">Create Order</h4>
+
+    <div class="mb-3">
+        <label for="orderDate" class="form-label">Order Date</label>
+        <input type="datetime-local" class="form-control" id="orderDate" @bind="@latest.OrderDate" name="OrderDate" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-select" id="status" name="Status" @bind="@latest.Status" required>
+            <option value="Pending">Pending</option>
+            <option value="InProduction">In Production</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="deliveryAddress" class="form-label">Delivery Address</label>
+        <textarea class="form-control" id="deliveryAddress" @bind="@latest.DeliveryAddress" name="DeliveryAddress" rows="3" required></textarea>
+    </div>
+
+    <div class="mb-3 text-end">
+        <label class="form-label fw-bold">Total Price:</label>
+        <div class="fs-5">@Total.ToString("C")</div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-custom me-2">Submit Order</button>
+        <button type="reset" class="btn btn-secondary">Cancel</button>
+    </div>
+</form>
+@code
+{
+
+    public List<OrderItem> ItemsC { get; set; } = new List<OrderItem>();
+    public Order latest { get; set; } = new Order();
+    public decimal Total { get; set; } = 0;
+    protected override async Task OnInitializedAsync()
+    {
+
+        var cart = await uc.GetCartAsync();
+        ItemsC = cart.OrderItems;
+        Total = cart.TotalPrice;
+        string id = await Js.InvokeAsync<string>("localStorage.getItem", "userId");
+        latest.TotalPrice = Total;
+        latest.UserId = id;
+        latest.Items = new List<OrderItem>();
+        await os.CreateAsync(latest);
+
+        var all = (await os.GetAllAsync())
+        .OrderByDescending(o => o.OrderId)
+        .ToList();
+        Order temp = all[0];
+        foreach(var c in ItemsC)
+        {
+
+            OrderItem orderItem = new OrderItem
+                {
+                    
+                    ProductId = c.ProductId,
+                    Quantity = c.Quantity,
+                    UnitPrice = c.UnitPrice,
+                    
+                    OrderId = temp.OrderId,
+                    AppliedCustomizations = c.AppliedCustomizations
+                    .Select(opt => new CustomizationOption
+                    {
+                        CustomizationOptionId = opt.CustomizationOptionId,
+                        ProductId = opt.ProductId,
+      
+                        OptionName = opt.OptionName,
+                        OptionValue = opt.OptionValue
+                    })
+                    .ToList() ?? new List<CustomizationOption>(),
+                    SelectedDesignTemplateId = c.SelectedDesignTemplateId,
+                };
+            temp.Items.Add(orderItem);
+            await ois.CreateAsync(orderItem);
+        }
+        await os.UpdateAsync(temp.OrderId, temp);
+
+
+    }
+    
+
+} *@

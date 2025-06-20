@@ -1,0 +1,98 @@
+﻿@page "/gallery"
+@inject IJSRuntime JSRuntime
+@using System.IO
+@using PrintsStudio.Client.Models
+@inject HttpClient HttpClient
+@inject Services.ProductDesignTemplateService pd
+<style>
+    body
+    {
+      background-color:#ceedec;
+    }
+</style>
+<PrintsStudio.Client.Pages.BreadCrumbComponent />
+<h3 style="margin:20px ; text-align:center;">Image Gallery</h3>
+
+@if (images == null)
+{
+    <p>Loading images...</p>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            @foreach (var image in images)
+            {
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="card">
+                        <img src="@($"https://localhost:7032{image.Url}")" class="card-img-top" style="height:200px;" alt="@image.Title">
+                        <div class="card-body">
+                           
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-primary btn-sm" @onclick="() => DownloadImage(image)">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="btn btn-secondary btn-sm" @onclick="() => CopyImageUrl(image)">
+                                    <i class="fas fa-copy"></i> Copy URL
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private List<GalleryImage> images=new List<GalleryImage>();
+    public List<ProductDesignTemplate> productDesignTemplates{ get; set; } =  new List<ProductDesignTemplate>();
+    protected override async Task OnInitializedAsync()
+    {
+
+        productDesignTemplates =await pd.GetAllAsync();
+        for(int i=0;i<productDesignTemplates.Count;i++)
+        {
+            var gi = new GalleryImage { Id = i, Title = productDesignTemplates[i].ProductDesignTemplateId.ToString(), Url = productDesignTemplates[i].TemplateImageUrl, FileName = productDesignTemplates[i].ProductId.ToString() };
+            images.Add(gi);
+        }
+    }
+
+    private async Task DownloadImage(GalleryImage image)
+    {
+        try
+        {
+            // Fetch the image
+            var response = await HttpClient.GetAsync(image.Url);
+            var content = await response.Content.ReadAsByteArrayAsync();
+
+            // Trigger download
+            await JSRuntime.InvokeVoidAsync("downloadFile", image.FileName, content);
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", $"Error downloading image: {ex.Message}");
+        }
+    }
+
+    private async Task CopyImageUrl(GalleryImage image)
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("copyToClipboard", image.Url);
+            await JSRuntime.InvokeVoidAsync("alert", "Image URL copied to clipboard!");
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", $"Error copying URL: {ex.Message}");
+        }
+    }
+
+    public class GalleryImage
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Url { get; set; }
+        public string FileName { get; set; }
+    }
+}

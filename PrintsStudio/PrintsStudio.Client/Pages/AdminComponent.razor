@@ -1,0 +1,204 @@
+﻿@page "/admin-panel"
+
+@using PrintsStudio.Client.Models
+@inject HttpClient Http
+@inject PrintsStudio.Client.Services.ReviewService rs
+@inject PrintsStudio.Client.Services.UserService us
+@inject PrintsStudio.Client.Services.OrderService os
+@inject PrintsStudio.Client.Services.ProductService ps
+
+<style>
+    .boddy {
+        font-family: 'Lato', sans-serif;
+        background-color: #f0f0f0;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        background: linear-gradient(135deg, #07a6a6, #242f66);
+        min-height: 100vh;
+        color: white;
+        font-family: 'Merriweather', serif;
+        padding-top: 1.5rem;
+    }
+
+        .sidebar a {
+            color: #f0f0f0;
+            text-decoration: none;
+            display: block;
+            padding: 0.75rem 1.5rem;
+            border-left: 4px solid transparent;
+            transition: background-color 0.3s, border-left-color 0.3s;
+        }
+
+            .sidebar a:hover,
+            .sidebar a.active {
+                background-color: #065353;
+                border-left-color: #ceedec;
+                color: #ceedec;
+            }
+
+    .card-title {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+    }
+
+    thead {
+        background: #07a6a6;
+        color: white;
+        font-family: 'Merriweather', serif;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #ceedec;
+    }
+
+    .header-title {
+        font-family: 'Merriweather', serif;
+        color: #242f66;
+    }
+</style>
+
+<body class="boddy">
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="sidebar flex-shrink-0 p-3" style="width: 250px;">
+            <h3 class="px-3 mb-4">Prints Studio</h3>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" aria-current="page">Dashboard</a>
+                </li>
+                <li>
+                    <a href="/all-products" class="nav-link">Products</a>
+                </li>
+                <li>
+                    <a href="/all-orders" class="nav-link">Orders</a>
+                </li>
+                <li>
+                    <a href="/all-users" class="nav-link">Customers</a>
+                </li>
+                <li>
+                    <a href="/all-inquires" class="nav-link">Inquires Received</a>
+                </li>
+                <li>
+                    <a href="/upload-design" class="nav-link">Upload a Templated Design</a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex-grow-1 p-4">
+            <h1 class="header-title mb-4">Dashboard</h1>
+
+            <!-- Summary Cards -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total Orders</h5>
+                            <h2 class="text-primary">@((AllOrders != null) ? AllOrders.Count : 0)</h2>
+                            <small class="text-muted">Last 30 days</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Revenue</h5>
+                            <h2 class="text-success">Rs. @Total</h2>
+                            <small class="text-muted">Last 30 days</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Products</h5>
+                            <h2 class="text-info">@((AllProducts != null) ? AllProducts.Count : 0)</h2>
+                            <small class="text-muted">Available now</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Customers</h5>
+                            <h2 class="text-warning">@((AllUsers != null) ? AllUsers.Count : 0)</h2>
+                            <small class="text-muted">Registered users</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders Table -->
+            <h3 class="mb-3">Recent Orders</h3>
+            <div class="table-responsive shadow-sm">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer ID</th>
+                            <th>Number Of Items</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Total (Rs.)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (AllOrders == null)
+                        {
+                            <tr><td colspan="6"><em>Loading...</em></td></tr>
+                        }
+                        else if (AllOrders.Count == 0)
+                        {
+                            <tr><td colspan="6">Nothing to show</td></tr>
+                        }
+                        else
+                        {
+                            @for (int i = 0; i < 6 && i < AllOrders.Count; i++)
+                            {
+                                <tr>
+                                    <td>@AllOrders[i].OrderId</td>
+                                    <td>@(AllOrders[i].UserId?.Substring(0, Math.Min(10, AllOrders[i].UserId.Length)))</td>
+                                    <td>@(AllOrders[i].Items?.Count ?? 0)</td>
+                                    <td><span class="badge bg-success">@AllOrders[i].Status</span></td>
+                                    <td>@AllOrders[i].OrderDate</td>
+                                    <td>@AllOrders[i].TotalPrice</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Quick Actions -->
+            <h3 class="mt-5 mb-3">Quick Actions</h3>
+            <div class="d-flex flex-wrap gap-3">
+                <a href="/add-product" class="btn btn-primary">Add New Product</a>
+                <a href="/all-orders" class="btn btn-secondary">View All Orders</a>
+                <a href="/all-users" class="btn btn-warning text-dark">Manage Customers</a>
+                <a href="/all-designers" class="btn btn-warning text-dark">Manage Designers</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+@code {
+    public List<Order>? AllOrders { get; set; }
+    public List<Product>? AllProducts { get; set; }
+    public List<UserDTO>? AllUsers { get; set; }
+    public decimal Total { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllOrders = await os.GetAllAsync() ?? new List<Order>();
+        AllUsers = await us.GetAllUsersAsync() ?? new List<UserDTO>();
+        AllProducts = await ps.GetAllAsync() ?? new List<Product>();
+
+        foreach (var o in AllOrders)
+        {
+            Total += o.TotalPrice;
+        }
+    }
+}

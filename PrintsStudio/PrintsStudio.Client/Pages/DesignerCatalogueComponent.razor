@@ -1,0 +1,40 @@
+﻿@page "/designers"
+@inject Services.DesignerService Ds
+@inject Services.UserService Us
+@using PrintsStudio.Client.Models
+<h2 class="text-center my-4 mb-2" style="font-family: 'Merriweather', serif; color: #242f66;">
+    Our Graphic Designers
+</h2>
+<PrintsStudio.Client.Pages.BreadCrumbComponent />
+<button class="text-center ms-2 mt-3 mb-3" style=" font-family: 'Merriweather', serif;
+        color: white; background-color:#242f66; border:none; border-color:none;">
+   
+    <a href="/designer-form" style="text-decoration:none;border:none; border-color:none; color:white;">Join As a Designer </a>
+</button>
+<div>@if(designers==null)
+    {
+        <h1 class="text-center">Nothing To Show</h1>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row g-4">
+                @foreach (var designer in designers)
+                {
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center">
+                        <DesignerCardComponent designer="@designer"></DesignerCardComponent>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+@code {
+    public List<Designer> designers{ get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        designers = await Ds.GetAllAsync();
+        
+    }
+
+}
