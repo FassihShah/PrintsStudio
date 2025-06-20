@@ -1,4 +1,4 @@
-# 🖨PrintsStudio – Full Stack Blazor Web Application
+# PrintsStudio – Full Stack Blazor Web Application
 
 **PrintsStudio** is a dynamic, modern full-stack printing service platform built with **Blazor WebAssembly** for the frontend and a **Clean Architecture ASP.NET Core API** on the backend. It allows users to customize, preview, and order printed products such as business cards, wedding invitations, and personalized templates.
 
