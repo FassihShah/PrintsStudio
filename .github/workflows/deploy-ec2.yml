@@ -19,13 +19,13 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore server
-        run: dotnet restore PrintsStudio.Server/PrintsStudio.Server.csproj
+        run: dotnet restore PrintsStudio/PrintsStudio.Server/PrintsStudio.Server.csproj
 
       - name: Build server
-        run: dotnet build PrintsStudio.Server/PrintsStudio.Server.csproj -c Release --no-restore
+        run: dotnet build PrintsStudio/PrintsStudio.Server/PrintsStudio.Server.csproj -c Release --no-restore
 
       - name: Build client
-        run: dotnet build PrintsStudio.Client/PrintsStudio.Client.csproj -c Release
+        run: dotnet build PrintsStudio/PrintsStudio.Client/PrintsStudio.Client.csproj -c Release
 
       - name: Create deployment bundle
         run: |
@@ -56,7 +56,7 @@ jobs:
             rm -rf /home/${{ secrets.EC2_USERNAME }}/PrintsStudio
             mkdir -p /home/${{ secrets.EC2_USERNAME }}/PrintsStudio
             tar -xzf /home/${{ secrets.EC2_USERNAME }}/printsstudio-deploy.tgz -C /home/${{ secrets.EC2_USERNAME }}/PrintsStudio
-            cd /home/${{ secrets.EC2_USERNAME }}/PrintsStudio
+            cd /home/${{ secrets.EC2_USERNAME }}/PrintsStudio/PrintsStudio
             chmod +x deployment/aws-ec2/setup-ubuntu.sh
             chmod +x deployment/aws-ec2/deploy.sh
             ./deployment/aws-ec2/setup-ubuntu.sh
