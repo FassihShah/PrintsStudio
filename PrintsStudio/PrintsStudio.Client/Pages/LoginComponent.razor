@@ -125,13 +125,15 @@
 
     private async Task HandleLogin()
     {
-        if(loginModel.Password=="admin_printsstudio" && loginModel.Email=="admin@printsstudio.com")
+        if (loginModel.Email == "admin@printsstudio.com" && loginModel.Password == "Admin@123")
         {
             NavigationManager.NavigateTo("/admin-panel");
+            return;
         }
-        var response =await US.LoginAsync(loginModel);
+
+        var response = await US.LoginAsync(loginModel);
         var user = await US.GetUserByEmailAsync(loginModel.Email);
-        if(response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode && user != null)
         {
             string? r = user.Role;
             await Js.InvokeVoidAsync("localStorage.setItem", "userEmail", user.Email);
@@ -144,17 +146,17 @@
         }
         else
         {
-            if(user==null)
+            if (user == null)
             {
                 await Js.InvokeVoidAsync("showAlert", "Not Registered");
             }
             else
             {
-                if (loginModel.Password != "admin_printsstudio" && loginModel.Email != "admin@printsstudio.com")
-                {
-                    await Js.InvokeVoidAsync("showAlert", "Incorrect password or email");
-                }
-               
+                var error = await response.Content.ReadFromJsonAsync<AuthResult>();
+                var message = error?.Errors?.Count > 0
+                    ? string.Join("\n", error.Errors)
+                    : error?.Message ?? "Incorrect password or email";
+                await Js.InvokeVoidAsync("showAlert", message);
             }
         }
     }

@@ -1,4 +1,3 @@
-﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PrintsStudio.Application;
 using PrintsStudio.Application.Interfaces;
@@ -21,13 +20,10 @@ namespace PrintsStudio.Server.Controllers
         public async Task<ActionResult<UserDTO>> GetCurrentUser()
         {
             var userId = await _userService.GetCurrentUserIdAsync();
-            if (userId == null)
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                Console.WriteLine("hey" + userId);
                 return Unauthorized();
             }
-              
-            
 
             var user = await _userService.GetByIdAsync(userId);
             return Ok(user);
@@ -38,7 +34,9 @@ namespace PrintsStudio.Server.Controllers
         {
             var user = await _userService.GetByIdAsync(id);
             if (user == null)
+            {
                 return NotFound();
+            }
 
             return Ok(user);
         }
@@ -66,7 +64,9 @@ namespace PrintsStudio.Server.Controllers
         {
             var result = await _userService.UpdateUserAsync(userDto);
             if (!result)
+            {
                 return NotFound();
+            }
 
             return NoContent();
         }
@@ -79,30 +79,34 @@ namespace PrintsStudio.Server.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginModel lm)
+        public async Task<IActionResult> Login([FromBody] LoginModel lm)
         {
-            var success = await _userService.LoginUserAsync(lm.Email, lm.Password, lm.RememberMe);
-            if (!success)
-                return Unauthorized("Invalid credentials");
+            var result = await _userService.LoginUserAsync(lm.Email, lm.Password, lm.RememberMe);
+            if (!result.Succeeded)
+            {
+                return Unauthorized(result);
+            }
 
-            return Ok("Login successful");
+            return Ok(result);
         }
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
             await _userService.LogoutAsync();
-            return Ok("Logged out");
+            return Ok(new AuthResult { Succeeded = true, Message = "Logged out." });
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterModel rm)
+        public async Task<IActionResult> Register([FromBody] RegisterModel rm)
         {
-            var success = await _userService.CreateUserAsync(rm);
-            if (!success)
-                return BadRequest("User registration failed");
+            var result = await _userService.CreateUserAsync(rm);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result);
+            }
 
-            return Ok("User registered successfully");
+            return Ok(result);
         }
 
         [HttpPost("register-designer")]
@@ -115,14 +119,16 @@ namespace PrintsStudio.Server.Controllers
             string profileImageUrl,
             bool isAvailable)
         {
-            var success = await _userService.CreateDesignerAsync(
+            var result = await _userService.CreateDesignerAsync(
                 fullName, email, password, bio, portfolioUrl, profileImageUrl, isAvailable
             );
 
-            if (!success)
-                return BadRequest("Designer registration failed");
+            if (!result.Succeeded)
+            {
+                return BadRequest(result);
+            }
 
-            return Ok("Designer registered successfully");
+            return Ok(result);
         }
 
         [HttpGet("email/{email}")]
@@ -130,7 +136,9 @@ namespace PrintsStudio.Server.Controllers
         {
             var user = await _userService.GetUserByEmailAsync(email);
             if (user == null)
+            {
                 return NotFound();
+            }
 
             return Ok(user);
         }
@@ -157,18 +165,21 @@ namespace PrintsStudio.Server.Controllers
         public async Task<IActionResult> Seed()
         {
             await _userService.SeedRolesAndUsers();
-            return Ok("Seeding complete");
+            return Ok(new AuthResult { Succeeded = true, Message = "Seeding complete." });
         }
+
         [HttpPost("upload-profile-image")]
         public async Task<IActionResult> UploadProfileImage(IFormFile file)
         {
             if (file == null || file.Length == 0)
+            {
                 return BadRequest("No file uploaded.");
+            }
 
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
-            Directory.CreateDirectory(uploadsFolder); // ensure the folder exists
+            Directory.CreateDirectory(uploadsFolder);
 
-            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -176,9 +187,7 @@ namespace PrintsStudio.Server.Controllers
                 await file.CopyToAsync(stream);
             }
 
-            string fileUrl = $"/uploads/{uniqueFileName}"; // Relative URL for DB/frontend
-            return Ok(new { Url = fileUrl });
+            return Ok(new { Url = $"/uploads/{uniqueFileName}" });
         }
-
     }
 }

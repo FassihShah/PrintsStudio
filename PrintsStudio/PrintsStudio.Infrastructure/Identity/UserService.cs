@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PrintsStudio.Application;
 using PrintsStudio.Application.Interfaces;
 using PrintsStudio.Domain.Entities;
 using PrintsStudio.Infrastructure.Identity;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
+
 public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -27,9 +25,9 @@ public class UserService : IUserService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<string> GetCurrentUserIdAsync()
+    public Task<string> GetCurrentUserIdAsync()
     {
-        return _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
+        return Task.FromResult(_userManager.GetUserId(_httpContextAccessor.HttpContext?.User));
     }
 
     public async Task<UserDTO> GetByIdAsync(string userId)
@@ -73,28 +71,35 @@ public class UserService : IUserService
             .FirstOrDefaultAsync(u => u.Id == userDto.Id);
 
         if (user == null)
+        {
             return false;
+        }
 
         user.FullName = userDto.FullName;
         user.Email = userDto.Email;
+        user.UserName = userDto.Email;
         user.PhoneNumber = userDto.PhoneNumber;
         user.ProfileImageUrl = userDto.ProfileImageUrl;
         user.Role = userDto.Role;
 
-        if (!string.IsNullOrEmpty(userDto.Password))
+        if (!string.IsNullOrWhiteSpace(userDto.Password))
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             await _userManager.ResetPasswordAsync(user, token, userDto.Password);
         }
 
-        user.DesignerProfile = new Designer
+        if (userDto.DesignerProfile != null)
         {
-            UserId = user.Id,
-            Bio = userDto.DesignerProfile.Bio,
-            PortfolioUrl = userDto.DesignerProfile.PortfolioUrl,
-            ProfileImageUrl = userDto.DesignerProfile.ProfileImageUrl,
-            IsAvailable = userDto.DesignerProfile.IsAvailable
-        };
+            user.DesignerProfile = new Designer
+            {
+                UserId = user.Id,
+                Bio = userDto.DesignerProfile.Bio,
+                PortfolioUrl = userDto.DesignerProfile.PortfolioUrl,
+                ProfileImageUrl = userDto.DesignerProfile.ProfileImageUrl,
+                IsAvailable = userDto.DesignerProfile.IsAvailable
+            };
+        }
+
         var result = await _userManager.UpdateAsync(user);
         return result.Succeeded;
     }
@@ -108,14 +113,33 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<bool> LoginUserAsync(string email, string password, bool rememberMe)
+    public async Task<AuthResult> LoginUserAsync(string email, string password, bool rememberMe)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
-            return false;
+        {
+            return new AuthResult
+            {
+                Succeeded = false,
+                Message = "Account not found."
+            };
+        }
 
         var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, false);
-        return result.Succeeded;
+        if (result.Succeeded)
+        {
+            return new AuthResult
+            {
+                Succeeded = true,
+                Message = "Login successful."
+            };
+        }
+
+        return new AuthResult
+        {
+            Succeeded = false,
+            Message = "Invalid email or password."
+        };
     }
 
     public async Task LogoutAsync()
@@ -123,28 +147,72 @@ public class UserService : IUserService
         await _signInManager.SignOutAsync();
     }
 
-    public async Task<bool> CreateUserAsync(RegisterModel rm)
+    public async Task<AuthResult> CreateUserAsync(RegisterModel rm)
     {
+        var allowedRoles = new[] { "Customer", "Designer" };
+        if (!allowedRoles.Contains(rm.Role))
+        {
+            return new AuthResult
+            {
+                Succeeded = false,
+                Message = "Invalid role selected.",
+                Errors = new List<string> { "Public signup cannot create admin users." }
+            };
+        }
+
+        var existingUser = await _userManager.FindByEmailAsync(rm.Email);
+        if (existingUser != null)
+        {
+            return new AuthResult
+            {
+                Succeeded = false,
+                Message = "Email is already registered.",
+                Errors = new List<string> { "An account with this email already exists." }
+            };
+        }
+
         var user = new ApplicationUser
         {
             FullName = rm.FullName,
             Email = rm.Email,
             UserName = rm.Email,
             Role = rm.Role,
-            PhoneNumber=rm.PhoneNumber,
-            ProfileImageUrl= rm.ProfileImageUrl,
-            
+            PhoneNumber = rm.PhoneNumber,
+            ProfileImageUrl = rm.ProfileImageUrl
         };
 
         var result = await _userManager.CreateAsync(user, rm.Password);
-        if (!result.Succeeded) return false;
+        if (!result.Succeeded)
+        {
+            return new AuthResult
+            {
+                Succeeded = false,
+                Message = "Registration failed.",
+                Errors = result.Errors.Select(e => e.Description).ToList()
+            };
+        }
 
         await _userManager.AddToRoleAsync(user, rm.Role);
-        return true;
+        return new AuthResult
+        {
+            Succeeded = true,
+            Message = "User registered successfully."
+        };
     }
 
-    public async Task<bool> CreateDesignerAsync(string fullName, string email, string password, string bio, string portfolioUrl, string profileImageUrl, bool isAvailable)
+    public async Task<AuthResult> CreateDesignerAsync(string fullName, string email, string password, string bio, string portfolioUrl, string profileImageUrl, bool isAvailable)
     {
+        var existingUser = await _userManager.FindByEmailAsync(email);
+        if (existingUser != null)
+        {
+            return new AuthResult
+            {
+                Succeeded = false,
+                Message = "Email is already registered.",
+                Errors = new List<string> { "An account with this email already exists." }
+            };
+        }
+
         var user = new ApplicationUser
         {
             FullName = fullName,
@@ -161,10 +229,22 @@ public class UserService : IUserService
         };
 
         var result = await _userManager.CreateAsync(user, password);
-        if (!result.Succeeded) return false;
+        if (!result.Succeeded)
+        {
+            return new AuthResult
+            {
+                Succeeded = false,
+                Message = "Designer registration failed.",
+                Errors = result.Errors.Select(e => e.Description).ToList()
+            };
+        }
 
         await _userManager.AddToRoleAsync(user, "Designer");
-        return true;
+        return new AuthResult
+        {
+            Succeeded = true,
+            Message = "Designer registered successfully."
+        };
     }
 
     public async Task<UserDTO> GetUserByEmailAsync(string email)
@@ -181,17 +261,19 @@ public class UserService : IUserService
     public async Task<bool> IsUserInRoleAsync(string userId, string role)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        return await _userManager.IsInRoleAsync(user, role);
+        return user != null && await _userManager.IsInRoleAsync(user, role);
     }
 
-    public async Task<bool> IsSignedIn()
+    public Task<bool> IsSignedIn()
     {
-        return _signInManager.IsSignedIn(_httpContextAccessor.HttpContext.User);
+        var isSignedIn = _signInManager.IsSignedIn(_httpContextAccessor.HttpContext?.User);
+        return Task.FromResult(isSignedIn);
     }
 
-    public async Task<bool> IsAuthenticated()
+    public Task<bool> IsAuthenticated()
     {
-        return _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
+        var isAuthenticated = _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
+        return Task.FromResult(isAuthenticated);
     }
 
     public async Task SeedRolesAndUsers()
@@ -213,11 +295,10 @@ public class UserService : IUserService
             {
                 UserName = adminEmail,
                 Email = adminEmail,
-                PhoneNumber="234444",
+                PhoneNumber = "234444",
                 FullName = "Admin",
                 Role = "Admin",
-                ProfileImageUrl="/hjjj"
-                
+                ProfileImageUrl = "/hjjj"
             };
 
             var result = await _userManager.CreateAsync(admin, "Admin@123");
@@ -230,7 +311,10 @@ public class UserService : IUserService
 
     private UserDTO MapToDto(ApplicationUser user)
     {
-        if (user == null) return null;
+        if (user == null)
+        {
+            return null;
+        }
 
         return new UserDTO
         {
@@ -240,7 +324,7 @@ public class UserService : IUserService
             PhoneNumber = user.PhoneNumber,
             Role = user.Role,
             ProfileImageUrl = user.ProfileImageUrl,
-            Password = "", // Never return password for security
+            Password = "",
             DesignerProfile = user.DesignerProfile,
             Orders = user.Orders,
             Reviews = user.Reviews

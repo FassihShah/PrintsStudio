@@ -1,0 +1,63 @@
+name: Deploy To EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore server
+        run: dotnet restore PrintsStudio.Server/PrintsStudio.Server.csproj
+
+      - name: Build server
+        run: dotnet build PrintsStudio.Server/PrintsStudio.Server.csproj -c Release --no-restore
+
+      - name: Build client
+        run: dotnet build PrintsStudio.Client/PrintsStudio.Client.csproj -c Release
+
+      - name: Create deployment bundle
+        run: |
+          mkdir -p deploy-root
+          rsync -av --exclude='.git' --exclude='**/bin' --exclude='**/obj' ./ deploy-root/
+          tar \
+            -czf printsstudio-deploy.tgz \
+            -C deploy-root \
+            .
+
+      - name: Upload bundle to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "printsstudio-deploy.tgz"
+          target: "/home/${{ secrets.EC2_USERNAME }}"
+
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            rm -rf /home/${{ secrets.EC2_USERNAME }}/PrintsStudio
+            mkdir -p /home/${{ secrets.EC2_USERNAME }}/PrintsStudio
+            tar -xzf /home/${{ secrets.EC2_USERNAME }}/printsstudio-deploy.tgz -C /home/${{ secrets.EC2_USERNAME }}/PrintsStudio
+            cd /home/${{ secrets.EC2_USERNAME }}/PrintsStudio
+            chmod +x deployment/aws-ec2/setup-ubuntu.sh
+            chmod +x deployment/aws-ec2/deploy.sh
+            ./deployment/aws-ec2/setup-ubuntu.sh
+            ./deployment/aws-ec2/deploy.sh

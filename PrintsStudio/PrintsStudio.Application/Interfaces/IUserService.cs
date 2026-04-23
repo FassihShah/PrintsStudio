@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using PrintsStudio.Domain.Entities;
 
 namespace PrintsStudio.Application.Interfaces
@@ -12,10 +12,10 @@ namespace PrintsStudio.Application.Interfaces
         Task<List<UserDTO>> GetAdminsAsync();
         Task<bool> UpdateUserAsync(UserDTO userDto);
         Task DeleteUserAsync(string userId);
-        Task<bool> LoginUserAsync(string email, string password, bool rememberMe);
+        Task<AuthResult> LoginUserAsync(string email, string password, bool rememberMe);
         Task LogoutAsync();
-        Task<bool> CreateUserAsync(RegisterModel rm);
-        Task<bool> CreateDesignerAsync(string fullName, string email, string password, string bio, string portfolioUrl, string profileImageUrl, bool isAvailable);
+        Task<AuthResult> CreateUserAsync(RegisterModel rm);
+        Task<AuthResult> CreateDesignerAsync(string fullName, string email, string password, string bio, string portfolioUrl, string profileImageUrl, bool isAvailable);
         Task<UserDTO> GetUserByEmailAsync(string email);
         Task<bool> IsUserInRoleAsync(string userId, string role);
         Task<bool> IsSignedIn();

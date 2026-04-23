@@ -1,29 +1,27 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.DependencyInjection;
-using PrintsStudio.Infrastructure.Identity;
-using PrintsStudio.Domain.Interfaces;
+using System.Text.Json.Serialization;
 using PrintsStudio.Application.Interfaces;
 using PrintsStudio.Application.Services;
+using PrintsStudio.Domain.Interfaces;
+using PrintsStudio.Infrastructure.Identity;
 using PrintsStudio.Infrastructure.Repositories;
 using PrintsStudio.Server.Repositories;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
 
 var builder = WebApplication.CreateBuilder(args);
 var databaseProvider = builder.Configuration["DatabaseProvider"] ?? "SqlServer";
 var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 var frontendOrigin = builder.Configuration["FrontendOrigin"];
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 
-// Add services to the container
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     if (string.Equals(databaseProvider, "Sqlite", StringComparison.OrdinalIgnoreCase))
@@ -39,12 +37,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
+    options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "PrintsStudio.Auth";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.SlidingExpiration = true;
+    options.LoginPath = "/login";
+});
 
-// Register repositories
 builder.Services.AddScoped<IDesignerRepository, DesignerRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
@@ -55,7 +61,6 @@ builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 builder.Services.AddScoped<IContactFormRepository, ContactFormRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
-// Register services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -64,9 +69,8 @@ builder.Services.AddScoped<ICustomizationOptionService, CustomizationOptionServi
 builder.Services.AddScoped<IDesignerService, DesignerService>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IContactFormService, ContactFormService>();
-builder.Services.AddScoped<IBookingService,BookingService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IProductDesignTemplateService, ProductDesignTemplateService>();
-
 
 builder.Services.AddCors(options =>
 {
@@ -75,22 +79,18 @@ builder.Services.AddCors(options =>
         if (!string.IsNullOrWhiteSpace(frontendOrigin))
         {
             policy.WithOrigins(frontendOrigin)
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
         }
         else
         {
             policy.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         }
     });
 });
-
-
-// Seed roles and admin user
-
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
@@ -109,6 +109,7 @@ using (var scope = app.Services.CreateScope())
 
     await userService.SeedRolesAndUsers();
 }
+
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -117,8 +118,6 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 app.UseCors("AllowFrontend");
 app.UseStaticFiles();
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -126,7 +125,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
