@@ -1,20 +1,41 @@
-﻿@page "/"
+@page "/"
 @page "/Home/{role}"
 
-<NavComponent Role="@role" />
-<HeroComponent></HeroComponent> 
- <CaourselComponent></CaourselComponent> 
-<AboutUsComponent></AboutUsComponent>
- <TrendingNowComponent></TrendingNowComponent>
-<DesignerComponent></DesignerComponent>
-<ReviewCarouselComponent></ReviewCarouselComponent>
-<FooterComponent></FooterComponent>
- 
+<div class="home-page">
+    <NavComponent Role="@role" />
+
+    <section class="ps-section">
+        <HeroComponent></HeroComponent>
+    </section>
+
+    <section class="ps-section ps-delay-1">
+        <CaourselComponent></CaourselComponent>
+    </section>
+
+    <section class="ps-section ps-delay-2">
+        <AboutUsComponent></AboutUsComponent>
+    </section>
+
+    <section class="ps-section ps-delay-2">
+        <TrendingNowComponent></TrendingNowComponent>
+    </section>
+
+    <section class="ps-section ps-delay-3">
+        <DesignerComponent></DesignerComponent>
+    </section>
+
+    <section class="ps-section ps-delay-4">
+        <ReviewCarouselComponent></ReviewCarouselComponent>
+    </section>
+
+    <FooterComponent></FooterComponent>
+</div>
 
 @code
 {
     [Parameter]
     public string? role { get; set; }
+
     protected override void OnParametersSet()
     {
         if (string.IsNullOrEmpty(role))
