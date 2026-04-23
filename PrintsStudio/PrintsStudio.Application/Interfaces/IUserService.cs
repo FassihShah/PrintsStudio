@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using PrintsStudio.Domain.Entities;
 
 namespace PrintsStudio.Application.Interfaces
