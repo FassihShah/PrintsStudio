@@ -14,7 +14,10 @@ namespace PrintsStudio.Infrastructure.Identity
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=PrintsStudio;Integrated Security=True;");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=PrintsStudio;Integrated Security=True;");
+            }
         }
 
         public DbSet<Product> Products { get; set; }

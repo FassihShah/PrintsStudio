@@ -160,8 +160,7 @@
         {
             var result = await response.Content.ReadFromJsonAsync<UploadResponse>();
             profileImageUrl = result?.Url;
-            string s = "https://localhost:7032";
-            registerModel.ProfileImageUrl = s+result?.Url;
+            registerModel.ProfileImageUrl = result?.Url ?? string.Empty;
         }
         else
         {

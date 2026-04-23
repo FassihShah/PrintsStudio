@@ -151,11 +151,11 @@
                     <div class="card h-100 shadow-sm p-2">
                         @if (product.Images.Count > 1)
                         {
-                            <img src="@($"https://localhost:7032{product.Images[1]}")" class="card-img-top" alt="@product.Name" />
+                            <img src="@product.Images[1]" class="card-img-top" alt="@product.Name" />
                         }
                         else
                         {
-                            <img src="@($"https://localhost:7032{product.Images[0]}")" class="card-img-top" alt="@product.Name" />
+                            <img src="@product.Images[0]" class="card-img-top" alt="@product.Name" />
                         }
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">@product.Name</h5>

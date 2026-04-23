@@ -94,7 +94,7 @@ else
                             @for (int i = 1; i < Product.Images.Count; i++)
                             {
                                 <div class="carousel-item @(i == 1 ? "active" : "")">
-                                    <img src="@($"https://localhost:7032{Product.Images[i]}")" class="d-block w-100" alt="Product Image @(i+1)" />
+                                    <img src="@Product.Images[i]" class="d-block w-100" alt="Product Image @(i+1)" />
                                 </div>
                             }
                         </div>

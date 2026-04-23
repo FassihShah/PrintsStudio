@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using PrintsStudio.Infrastructure.Identity;
 using PrintsStudio.Domain.Interfaces;
@@ -11,6 +12,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
+var databaseProvider = builder.Configuration["DatabaseProvider"] ?? "SqlServer";
+var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+var frontendOrigin = builder.Configuration["FrontendOrigin"];
 
 // Add services to the container.
 
@@ -22,7 +26,14 @@ builder.Services.AddSwaggerGen();
 // Add services to the container
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    if (string.Equals(databaseProvider, "Sqlite", StringComparison.OrdinalIgnoreCase))
+    {
+        options.UseSqlite(defaultConnection);
+    }
+    else
+    {
+        options.UseSqlServer(defaultConnection);
+    }
 });
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -61,10 +72,19 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("https://localhost:7172") // your Blazor WebAssembly origin
-               .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+        if (!string.IsNullOrWhiteSpace(frontendOrigin))
+        {
+            policy.WithOrigins(frontendOrigin)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        }
+        else
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        }
     });
 });
 
@@ -75,20 +95,27 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+
+    if (string.Equals(databaseProvider, "Sqlite", StringComparison.OrdinalIgnoreCase))
+    {
+        await dbContext.Database.EnsureCreatedAsync();
+    }
+    else
+    {
+        await dbContext.Database.MigrateAsync();
+    }
+
     await userService.SeedRolesAndUsers();
 }
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
 app.UseCors("AllowFrontend");
 app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
-{
-    OnPrepareResponse = ctx =>
-    {
-        ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "https://localhost:7172");
-        ctx.Context.Response.Headers.Append("Access-Control-Allow-Headers", "*");
-        ctx.Context.Response.Headers.Append("Access-Control-Allow-Methods", "*");
-    }
-});
 
 
 // Configure the HTTP request pipeline.
@@ -100,8 +127,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 app.Run();

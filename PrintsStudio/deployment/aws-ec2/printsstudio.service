@@ -1,0 +1,17 @@
+[Unit]
+Description=PrintsStudio ASP.NET Core API
+After=network.target
+
+[Service]
+WorkingDirectory=/var/www/printsstudio/backend
+ExecStart=/usr/bin/dotnet /var/www/printsstudio/backend/PrintsStudio.Server.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=printsstudio
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://0.0.0.0:5000
+
+[Install]
+WantedBy=multi-user.target
