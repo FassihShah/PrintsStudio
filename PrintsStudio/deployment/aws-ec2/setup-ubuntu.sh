@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-sudo apt-get update
-sudo apt-get install -y nginx unzip
+if ! command -v nginx >/dev/null 2>&1 || ! command -v unzip >/dev/null 2>&1; then
+    sudo apt-get update
+    sudo apt-get install -y nginx unzip
+fi
 
-wget https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb
-sudo dpkg -i /tmp/packages-microsoft-prod.deb
-rm /tmp/packages-microsoft-prod.deb
+if ! command -v dotnet >/dev/null 2>&1; then
+    wget https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb
+    sudo dpkg -i /tmp/packages-microsoft-prod.deb
+    rm /tmp/packages-microsoft-prod.deb
 
-sudo apt-get update
-sudo apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0
+    sudo apt-get update
+    sudo apt-get install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0
+fi
 
 sudo mkdir -p /var/www/printsstudio/backend /var/www/printsstudio/frontend /var/www/printsstudio/data
 sudo chown -R "$USER":"$USER" /var/www/printsstudio

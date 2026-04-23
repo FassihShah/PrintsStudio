@@ -44,6 +44,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "printsstudio-deploy.tgz"
           target: "/home/${{ secrets.EC2_USERNAME }}"
+          timeout: 120s
+          command_timeout: 15m
 
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -51,6 +53,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          timeout: 120s
+          command_timeout: 45m
           script: |
             set -e
             rm -rf /home/${{ secrets.EC2_USERNAME }}/PrintsStudio
