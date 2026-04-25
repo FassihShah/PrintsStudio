@@ -27,10 +27,19 @@ jobs:
       - name: Build client
         run: dotnet build PrintsStudio/PrintsStudio.Client/PrintsStudio.Client.csproj -c Release
 
+      - name: Publish server
+        run: dotnet publish PrintsStudio/PrintsStudio.Server/PrintsStudio.Server.csproj -c Release -o published/backend --no-build
+
+      - name: Publish client
+        run: dotnet publish PrintsStudio/PrintsStudio.Client/PrintsStudio.Client.csproj -c Release -o published/client
+
       - name: Create deployment bundle
         run: |
           mkdir -p deploy-root
           rsync -av --exclude='.git' --exclude='**/bin' --exclude='**/obj' ./ deploy-root/
+          mkdir -p deploy-root/PrintsStudio/published
+          cp -r published/backend deploy-root/PrintsStudio/published/backend
+          cp -r published/client deploy-root/PrintsStudio/published/client
           tar \
             -czf printsstudio-deploy.tgz \
             -C deploy-root \

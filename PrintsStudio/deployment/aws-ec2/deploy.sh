@@ -5,12 +5,20 @@ APP_ROOT=/var/www/printsstudio
 BACKEND_OUT="$APP_ROOT/backend"
 FRONTEND_OUT="$APP_ROOT/frontend"
 TEMP_ROOT=/tmp/printsstudio-publish
+PUBLISHED_ROOT="$(pwd)/published"
 
 sudo mkdir -p "$BACKEND_OUT" "$FRONTEND_OUT" "$APP_ROOT/data" "$TEMP_ROOT"
 sudo chown -R "$USER":"$USER" "$APP_ROOT" "$TEMP_ROOT"
 
-dotnet publish PrintsStudio.Server/PrintsStudio.Server.csproj -c Release -o "$TEMP_ROOT/backend"
-dotnet publish PrintsStudio.Client/PrintsStudio.Client.csproj -c Release -o "$TEMP_ROOT/client"
+rm -rf "$TEMP_ROOT/backend" "$TEMP_ROOT/client"
+
+if [[ -d "$PUBLISHED_ROOT/backend" && -d "$PUBLISHED_ROOT/client" ]]; then
+    cp -r "$PUBLISHED_ROOT/backend" "$TEMP_ROOT/backend"
+    cp -r "$PUBLISHED_ROOT/client" "$TEMP_ROOT/client"
+else
+    dotnet publish PrintsStudio.Server/PrintsStudio.Server.csproj -c Release -o "$TEMP_ROOT/backend"
+    dotnet publish PrintsStudio.Client/PrintsStudio.Client.csproj -c Release -o "$TEMP_ROOT/client"
+fi
 
 cp -r "$TEMP_ROOT/backend/"* "$BACKEND_OUT/"
 cp "$TEMP_ROOT/backend/appsettings.Production.json" "$BACKEND_OUT/appsettings.Production.json"
