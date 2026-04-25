@@ -23,11 +23,23 @@
 
 <body>
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
+        <div class="ps-loader-shell">
+            <div class="ps-loader-card">
+                <div class="ps-loader-mark" aria-hidden="true">
+                    <span class="ps-loader-ring"></span>
+                    <span class="ps-loader-core">P</span>
+                </div>
+                <div class="ps-loader-copy">
+                    <p class="ps-loader-kicker">Launching your studio</p>
+                    <h1>Prints Studio</h1>
+                    <p class="ps-loader-subtitle">Preparing custom printing, products, and design tools.</p>
+                </div>
+                <div class="ps-loader-progress" aria-hidden="true">
+                    <div class="ps-loader-progress-bar"></div>
+                </div>
+                <div class="loading-progress-text"></div>
+            </div>
+        </div>
     </div>
 
     <div id="blazor-error-ui">

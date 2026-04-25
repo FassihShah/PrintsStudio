@@ -189,37 +189,131 @@ a:hover, .btn-link:hover {
     content: "An error has occurred.";
 }
 
-.loading-progress {
+.ps-loader-shell {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+    background:
+        radial-gradient(circle at top left, rgba(11, 157, 154, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(31, 47, 104, 0.16), transparent 34%),
+        linear-gradient(180deg, #fcfffe 0%, var(--ps-bg) 55%, #edf6f5 100%);
+}
+
+.ps-loader-card {
+    width: min(100%, 30rem);
+    padding: 2rem 1.6rem;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 24px 60px rgba(20, 45, 67, 0.14);
+    text-align: center;
+}
+
+.ps-loader-mark {
     position: relative;
-    display: block;
-    width: 8rem;
-    height: 8rem;
-    margin: 20vh auto 1rem auto;
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 1.35rem;
+    display: grid;
+    place-items: center;
 }
 
-.loading-progress circle {
-    fill: none;
-    stroke: #e0e0e0;
-    stroke-width: 0.6rem;
-    transform-origin: 50% 50%;
-    transform: rotate(-90deg);
+.ps-loader-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 6px solid rgba(11, 157, 154, 0.12);
+    border-top-color: var(--ps-brand);
+    border-right-color: var(--ps-brand-deep);
+    animation: ps-loader-spin 1.2s linear infinite;
 }
 
-.loading-progress circle:last-child {
-    stroke: var(--ps-brand);
-    stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
-    transition: stroke-dasharray 0.05s ease-in-out;
+.ps-loader-core {
+    width: 60px;
+    height: 60px;
+    border-radius: 20px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--ps-brand-deep), var(--ps-brand));
+    color: white;
+    font-family: 'Merriweather', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    box-shadow: 0 14px 30px rgba(20, 45, 67, 0.18);
+}
+
+.ps-loader-kicker {
+    margin: 0 0 0.45rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--ps-brand);
+}
+
+.ps-loader-copy h1 {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 2.5rem);
+}
+
+.ps-loader-subtitle {
+    margin: 0.85rem auto 1.2rem;
+    max-width: 24rem;
+    color: var(--ps-text-soft);
+    line-height: 1.6;
+}
+
+.ps-loader-progress {
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(20, 45, 67, 0.08);
+    margin: 0 auto 0.85rem;
+}
+
+.ps-loader-progress-bar {
+    width: 45%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--ps-brand), var(--ps-accent), var(--ps-brand-deep));
+    background-size: 200% 100%;
+    animation: ps-loader-slide 1.6s ease-in-out infinite;
 }
 
 .loading-progress-text {
-    position: absolute;
     text-align: center;
+    font-size: 0.92rem;
     font-weight: 700;
-    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+    color: var(--ps-brand-deep);
 }
 
 .loading-progress-text:after {
-    content: var(--blazor-load-percentage-text, "Loading");
+    content: var(--blazor-load-percentage-text, "Loading experience...");
+}
+
+@keyframes ps-loader-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes ps-loader-slide {
+    0% {
+        transform: translateX(-70%);
+        background-position: 0% 50%;
+    }
+
+    50% {
+        transform: translateX(125%);
+        background-position: 100% 50%;
+    }
+
+    100% {
+        transform: translateX(-70%);
+        background-position: 0% 50%;
+    }
 }
 
 code {
@@ -230,5 +324,14 @@ code {
     .ps-shell::before,
     .ps-shell::after {
         display: none;
+    }
+
+    .ps-loader-card {
+        padding: 1.7rem 1.1rem;
+        border-radius: 24px;
+    }
+
+    .ps-loader-subtitle {
+        font-size: 0.95rem;
     }
 }
