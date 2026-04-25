@@ -1,5 +1,6 @@
 ﻿
 @page "/hero"
+<PageTitle>Hero | Prints Studio</PageTitle>
 
 
 <style>
@@ -70,6 +71,42 @@
 
     .shape.red { width: 60px; height: 60px; background: #ff4d4d; top: 20px; left: 20px; }
     .shape.blue { width: 100px; height: 100px; background: #4dcaff; bottom: 0; left: 100px; }
+
+    @@media (max-width: 991.98px) {
+        .hero {
+            flex-direction: column;
+            padding: 40px 24px;
+            gap: 2rem;
+        }
+
+        .hero-text,
+        .hero-graphics {
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .hero-text h1 {
+            font-size: 2.25rem;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .hero {
+            padding: 32px 18px;
+        }
+
+        .hero-text h1 {
+            font-size: 1.9rem;
+        }
+
+        .hero-text button {
+            width: 100%;
+        }
+    }
 </style>
 
 <div class="hero">

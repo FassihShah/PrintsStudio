@@ -1,4 +1,5 @@
 ﻿@page "/trends"
+<PageTitle>Trending Now | Prints Studio</PageTitle>
 
 <style>
     .overlay-card {
@@ -66,6 +67,16 @@
     {
         background-color: white;
     }
+
+    @@media (max-width: 767.98px) {
+        .card-img {
+            height: 180px;
+        }
+
+        .discount-card .content {
+            width: 90%;
+        }
+    }
 </style>
 
 <div class="trend">
@@ -86,7 +97,7 @@
 
             <div class="col-md-8">
                 <div class="row g-3">
-                    <div class="col-4">
+                    <div class="col-6 col-md-4">
                         <div class="card overlay-card h-100">
                             <img src="/images/business card.jpg" class="card-img" alt="Card">
                             <div class="overlay" style="background-color: #ceedec;">
@@ -95,7 +106,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-6 col-md-4">
                         <div class="card overlay-card h-100">
                             <img src="/images/wedding cards.jpg" class="card-img" alt="Card">
                             <div class="overlay" style="background-color: #ceedec;">
@@ -104,7 +115,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-6 col-md-4">
                         <div class="card overlay-card h-100">
                             <img src="/images/stickers.jpg" class="card-img" alt="Card">
                             <div class="overlay" style="background-color: #ceedec;">
@@ -113,7 +124,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-6 col-md-4">
                         <div class="card overlay-card h-100">
                             <img src="/images/album.jpg" class="card-img" alt="Card">
                             <div class="overlay" style="background-color:#ceedec;">
@@ -122,7 +133,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-6 col-md-4">
                         <div class="card overlay-card h-100">
                             <img src="/images/poster.jpg" class="card-img" alt="Card">
                             <div class="overlay" style="background-color:#ceedec;">
@@ -131,7 +142,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-6 col-md-4">
                         <div class="card overlay-card h-100">
                             <img src="/images/hoddie.jpg" class="card-img" alt="Card">
                             <div class="overlay" style="background-color: #ceedec;">

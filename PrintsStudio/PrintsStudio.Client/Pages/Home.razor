@@ -1,9 +1,9 @@
 @page "/"
 @page "/Home/{role}"
 
-<div class="home-page">
-    <NavComponent Role="@role" />
+<PageTitle>Home | Prints Studio</PageTitle>
 
+<div class="home-page">
     <section class="ps-section">
         <HeroComponent></HeroComponent>
     </section>
@@ -27,20 +27,10 @@
     <section class="ps-section ps-delay-4">
         <ReviewCarouselComponent></ReviewCarouselComponent>
     </section>
-
-    <FooterComponent></FooterComponent>
 </div>
 
 @code
 {
     [Parameter]
     public string? role { get; set; }
-
-    protected override void OnParametersSet()
-    {
-        if (string.IsNullOrEmpty(role))
-        {
-            role = "Visitor";
-        }
-    }
 }

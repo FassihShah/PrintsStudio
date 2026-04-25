@@ -6,6 +6,8 @@
 @inject IJSRuntime JS
 @inject HttpClient Http
 
+<PageTitle>@(Product == null ? "Product Details | Prints Studio" : $"{Product.Name} | Prints Studio")</PageTitle>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <style>
     body {
@@ -70,8 +72,24 @@
             transform: scale(1.05);
             box-shadow: 0 0 10px #07a6a6;
         }
+
+    @@media (max-width: 767.98px) {
+        .carousel-item img {
+            height: 260px;
+        }
+
+        .review-section {
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .toast-container {
+            top: 12px;
+            right: 12px;
+            left: 12px;
+        }
+    }
 </style>
-<NavComponent></NavComponent>
 
 <PrintsStudio.Client.Pages.BreadCrumbComponent />
 
@@ -120,7 +138,6 @@ else
         </div>
     </div>
     <ProductReviewComponent ProductId="@Id"></ProductReviewComponent>
-    <FooterComponent></FooterComponent>
                             
                            
 

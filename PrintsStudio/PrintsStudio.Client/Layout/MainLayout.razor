@@ -1,8 +1,35 @@
 @inherits LayoutComponentBase
-<div class="page ps-shell">
-    <main>
-        <div class="main-stage">
+@inject NavigationManager Navigation
+
+<div class="page ps-shell ps-layout">
+    @if (!HideChrome)
+    {
+        <NavComponent />
+    }
+
+    <main class="ps-layout-main">
+        <div class="main-stage ps-content-shell">
             @Body
         </div>
     </main>
+
+    @if (!HideChrome)
+    {
+        <FooterComponent />
+    }
 </div>
+
+@code {
+    private bool HideChrome
+    {
+        get
+        {
+            var path = Navigation.ToBaseRelativePath(Navigation.Uri)
+                .Split('?', '#')[0]
+                .Trim('/')
+                .ToLowerInvariant();
+
+            return path is "nav" or "footer";
+        }
+    }
+}

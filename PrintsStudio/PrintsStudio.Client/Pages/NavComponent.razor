@@ -1,4 +1,5 @@
 @page "/nav"
+<PageTitle>Navigation | Prints Studio</PageTitle>
 @inject IJSRuntime Js
 @using PrintsStudio.Client.Models
 @inject Services.UserService us
@@ -83,15 +84,53 @@
         gap: 0.45rem;
     }
 
+    .navbar-toggler {
+        border: none;
+        border-radius: 14px;
+        padding: 0.55rem 0.75rem;
+        background: linear-gradient(135deg, rgba(11, 157, 154, 0.14), rgba(31, 47, 104, 0.12));
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 0.18rem rgba(11, 157, 154, 0.22);
+    }
+
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2820,47,88,0.88%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
     @@media (max-width: 991.98px) {
         .navbar-custom {
             max-width: calc(100% - 1rem);
             border-radius: 22px;
+            padding: 0.9rem 1rem;
         }
 
         .equal-width-nav {
             justify-content: flex-start;
+            align-items: stretch;
+            flex-direction: column;
             margin-top: 0.85rem;
+            width: 100%;
+        }
+
+        .navbar-collapse {
+            margin-top: 0.75rem;
+            padding-top: 0.5rem;
+        }
+
+        .equal-width-nav .nav-item,
+        .equal-width-nav .nav-link,
+        .equal-width-nav .btn-dark,
+        .equal-width-nav .logout-btn {
+            width: 100%;
+        }
+
+        .equal-width-nav .nav-link,
+        .equal-width-nav .logout-btn,
+        .equal-width-nav .btn-dark {
+            justify-content: center;
+            text-align: center;
         }
     }
 </style>

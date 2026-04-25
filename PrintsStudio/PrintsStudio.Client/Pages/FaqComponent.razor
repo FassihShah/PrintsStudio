@@ -33,11 +33,22 @@
         justify-content: space-between;
         height: 100%;
     }
+
+    @@media (max-width: 767.98px) {
+        .faq-card {
+            padding: 18px;
+        }
+
+        section.py-5 {
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+        }
+    }
 </style>
 
 <!-- FAQ Section -->
 @page "/faq"
-<NavComponent></NavComponent>
+<PageTitle>FAQs | Prints Studio</PageTitle>
 <section class="py-5">
     <h3 class="text-center mb-4 pb-2 fw-bold">Frequently Asked Questions</h3>
     <p class="text-center mb-5">
